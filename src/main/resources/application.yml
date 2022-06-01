@@ -1,0 +1,10 @@
+spring:
+  profiles:
+    active: dev
+    group:
+      dev:
+        - dev-db
+        - dev-jpa
+      prod:
+        - prod-db
+        - prod-jpa
