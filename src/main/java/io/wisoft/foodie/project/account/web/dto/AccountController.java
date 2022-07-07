@@ -5,7 +5,6 @@ import io.wisoft.foodie.project.account.service.AccountService;
 import io.wisoft.foodie.project.account.web.dto.res.FindAccountResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
