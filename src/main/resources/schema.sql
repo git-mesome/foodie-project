@@ -14,10 +14,10 @@ CREATE TABLE account
 (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     email VARCHAR(254) NOT NULL,
-    nickname VARCHAR(20) NOT NULL,
     password VARCHAR(20) NOT NULL,
-    grade_id INTEGER NOT NULL DEFAULT 1,
+    nickname VARCHAR(20) NOT NULL,
     phone_number VARCHAR(15),
+    grade_id INTEGER NOT NULL DEFAULT 1,
     CONSTRAINT account_grade_fkey FOREIGN KEY(grade_id) REFERENCES grade(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -38,15 +38,15 @@ CREATE TABLE block
     block_id BIGINT,
     CONSTRAINT fk_applicant_account FOREIGN KEY(applicant_id) REFERENCES account(id) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT fk_block_account FOREIGN KEY(block_id) REFERENCES account(id) ON DELETE CASCADE ON UPDATE CASCADE
-)
+);
 
 CREATE TABLE post
 (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    writer_id BIGINT NOT NULL,
-    title VARCHAR(20) NOT NULL,
+    author_id BIGINT NOT NULL,
+    title VARCHAR(500) NOT NULL,
     content TEXT NOT NULL,
-    category_id INTEGER NOT NULL,
+    category_id INTEGER,
     hit INTEGER,
     expiration_date DATE NOT NULL,
     create_date TIMESTAMP NOT NULL DEFAULT NOW(),
@@ -55,7 +55,7 @@ CREATE TABLE post
     deal_status VARCHAR(10) NOT NULL,
     last_deal_date TIMESTAMP,
     post_type VARCHAR(10) NOT NULL,
-    CONSTRAINT post_writer_fkey FOREIGN KEY(writer_id) REFERENCES account(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT post_writer_fkey FOREIGN KEY(author_id) REFERENCES account(id) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT post_category_fkey FOREIGN KEY(category_id) REFERENCES category(id) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT post_taker_fkey FOREIGN KEY(taker_id) REFERENCES account(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -105,7 +105,7 @@ CREATE TABLE message
     message text NOT NULL,
     create_time TIMESTAMP NOT NULL DEFAULT NOW(),
     CONSTRAINT message_chat_fkey FOREIGN KEY(chat_id) REFERENCES chat(id) ON DELETE CASCADE ON UPDATE CASCADE
-)
+);
 
 CREATE TABLE account_has_chat
 (

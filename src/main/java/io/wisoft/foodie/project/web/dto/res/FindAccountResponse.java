@@ -1,4 +1,4 @@
-package io.wisoft.foodie.project.account.web.dto.res;
+package io.wisoft.foodie.project.web.dto.res;
 
 import lombok.Getter;
 

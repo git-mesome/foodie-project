@@ -1,8 +1,8 @@
-package io.wisoft.foodie.project.account.web.dto;
+package io.wisoft.foodie.project.web.dto;
 
 
-import io.wisoft.foodie.project.account.service.AccountService;
-import io.wisoft.foodie.project.account.web.dto.res.FindAccountResponse;
+import io.wisoft.foodie.project.service.AccountService;
+import io.wisoft.foodie.project.web.dto.res.FindAccountResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,12 +25,12 @@ public class AccountController {
 
     }
 
-    @GetMapping("{/id}")
-    public ResponseEntity<FindAccountResponse> findAccountById(@PathVariable("id") @Valid final Long accountId){
-        return ResponseEntity.ok(
-                accountService.findAccountById(accountId)
-        );
-    }
+//    @GetMapping("{/id}")
+//    public ResponseEntity<FindAccountResponse> findAccountById(@PathVariable("id") @Valid final Long accountId){
+//        return ResponseEntity.ok(
+//                accountService.findAccountById(accountId)
+//        );
+//    }
 
 
 }
