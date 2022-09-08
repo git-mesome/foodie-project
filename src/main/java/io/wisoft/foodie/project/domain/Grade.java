@@ -20,7 +20,7 @@ public class Grade {
     private String name;
 
     @OneToMany(mappedBy = "grade")
-    private List<Account> accounts = new ArrayList<Account>();
+    private List<Account> accounts = new ArrayList<>();
 
 
     @Builder
