@@ -1,0 +1,1 @@
+INSERT INTO grade values (1,'짱');
