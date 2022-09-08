@@ -1,6 +1,6 @@
 package io.wisoft.foodie.project.domain;
 
-public enum PostStatus {
+public enum PostType {
 
     SHARE, EXCHANGE, RECIPE
 

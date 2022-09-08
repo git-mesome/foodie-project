@@ -3,7 +3,7 @@ package io.wisoft.foodie.project.domain.post;
 import io.wisoft.foodie.project.domain.account.Account;
 import io.wisoft.foodie.project.domain.Category;
 import io.wisoft.foodie.project.domain.DealStatus;
-import io.wisoft.foodie.project.domain.PostStatus;
+import io.wisoft.foodie.project.domain.PostType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -59,8 +59,8 @@ public class Post {
     private Date lastDealDate;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "post_status")
-    private PostStatus postStatus;
+    @Column(name = "post_type")
+    private PostType postType;
 
 
     @Builder

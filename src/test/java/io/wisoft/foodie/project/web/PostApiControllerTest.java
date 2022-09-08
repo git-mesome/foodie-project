@@ -2,7 +2,7 @@ package io.wisoft.foodie.project.web;
 
 import io.wisoft.foodie.project.domain.post.Post;
 import io.wisoft.foodie.project.domain.post.PostRepository;
-import io.wisoft.foodie.project.web.dto.PostRegisterRequestDto;
+import io.wisoft.foodie.project.web.dto.req.PostRegisterRequestDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

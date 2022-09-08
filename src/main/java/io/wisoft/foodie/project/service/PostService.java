@@ -4,9 +4,9 @@ import io.wisoft.foodie.project.domain.account.Account;
 import io.wisoft.foodie.project.domain.post.Post;
 import io.wisoft.foodie.project.domain.account.AccountRepository;
 import io.wisoft.foodie.project.domain.post.PostRepository;
-import io.wisoft.foodie.project.web.dto.PostRegisterRequestDto;
-import io.wisoft.foodie.project.web.dto.PostResponseDto;
-import io.wisoft.foodie.project.web.dto.PostUpdateRequestDto;
+import io.wisoft.foodie.project.web.dto.req.PostRegisterRequestDto;
+import io.wisoft.foodie.project.web.dto.res.PostResponseDto;
+import io.wisoft.foodie.project.web.dto.req.PostUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,10 +23,10 @@ public class PostService {
     @Transactional
     public Long registerPost(PostRegisterRequestDto requestDto) {
 
-        Account account = accountRepository.findById(requestDto.getAuthorId())
+        Account author = accountRepository.findById(requestDto.getAuthorId())
                 .orElseThrow();
 
-        return postRepository.save(requestDto.toEntity(account)).getId();
+        return postRepository.save(requestDto.toEntity(author)).getId();
 
     }
 
