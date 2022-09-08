@@ -2,9 +2,11 @@ package io.wisoft.foodie.project.domain.account;
 
 import io.wisoft.foodie.project.domain.Grade;
 import io.wisoft.foodie.project.domain.post.Post;
+import io.wisoft.foodie.project.web.dto.AccountDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import net.minidev.json.annotate.JsonIgnore;
+import org.springframework.test.context.support.AnnotationConfigContextLoaderUtils;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -13,7 +15,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name = "ACCOUNT")
+@Table(name = "account")
 public class Account {
 
     @Id
@@ -26,8 +28,8 @@ public class Account {
     @JsonIgnore
     private String password;
 
-    @Column(name = "nickname")
-    private String nickname;
+    @Column(name="nickname")
+    private String nickName;
 
     private String phoneNumber;
 
@@ -36,28 +38,35 @@ public class Account {
     private Grade grade;
 
     @OneToMany(mappedBy = "author")
-    private List<Post> post = new ArrayList<Post>();
+    private final List<Post> post = new ArrayList<Post>();
 
 
-    public Account(Long id, String nickname, String email, String password) {
+    public Account(final String email, final String password, final String nickName) {
 
-        this.id = id;
-        this.nickname = nickname;
         this.email = email;
         this.password = password;
+        this.nickName = nickName;
+        this.grade = Grade.builder()
+                .id(1L)
+                .name("짱").build();
 
     }
 
-    public Account toDomain() {
+    public static Account from(final AccountDto accountDto){
         return new Account(
-                this.id,
-                this.nickname,
-                this.email,
-                this.password
+                accountDto.getEmail(),
+                accountDto.getPassword(),
+                accountDto.getNickName()
         );
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public AccountDto toDomain() {
+        return new AccountDto(
+                this.id,
+                this.email,
+                this.password,
+                this.nickName
+        );
     }
+
 }

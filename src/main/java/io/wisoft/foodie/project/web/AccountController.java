@@ -1,4 +1,4 @@
-package io.wisoft.foodie.project.web.dto;
+package io.wisoft.foodie.project.web;
 
 
 import io.wisoft.foodie.project.service.AccountService;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/accounts")
+@RequestMapping("/accounts")
 public class AccountController {
 
     private final AccountService accountService;
