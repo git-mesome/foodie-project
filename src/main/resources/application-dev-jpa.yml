@@ -6,4 +6,10 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
+    generate-ddl: true
+  sql:
+    init:
+      mode: always
+      data-locations: classpath*:db/data.sql
+      schema-locations: classpath*:db/schema.sql
