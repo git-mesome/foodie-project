@@ -1,6 +1,6 @@
-package io.wisoft.foodie.project.domain;
+package io.wisoft.foodie.project.domain.post.persistance;
 
-import io.wisoft.foodie.project.domain.post.Post;
+import io.wisoft.foodie.project.domain.post.persistance.PostEntity;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -18,6 +18,6 @@ public class Category {
     private String name;
 
     @OneToMany(mappedBy = "category")
-    private List<Post> posts = new ArrayList<Post>();
+    private List<PostEntity> postEntities = new ArrayList<PostEntity>();
 
 }

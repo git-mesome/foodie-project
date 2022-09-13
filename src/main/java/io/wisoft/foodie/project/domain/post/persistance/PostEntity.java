@@ -1,9 +1,6 @@
-package io.wisoft.foodie.project.domain.post;
+package io.wisoft.foodie.project.domain.post.persistance;
 
-import io.wisoft.foodie.project.domain.account.Account;
-import io.wisoft.foodie.project.domain.Category;
-import io.wisoft.foodie.project.domain.DealStatus;
-import io.wisoft.foodie.project.domain.PostType;
+import io.wisoft.foodie.project.domain.account.persistance.AccountEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +12,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Entity
 @Table(name = "post")
-public class Post {
+public class PostEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +20,7 @@ public class Post {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "Author_id")
-    private Account author;
+    private AccountEntity author;
 
     @Column(name = "title", length = 500, nullable = false)
     private String title;
@@ -49,7 +46,7 @@ public class Post {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "taker_id")
-    private Account taker;
+    private AccountEntity taker;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "deal_status")
@@ -64,7 +61,7 @@ public class Post {
 
 
     @Builder
-    public Post(Account author, String title, String content) {
+    public PostEntity(AccountEntity author, String title, String content) {
         this.author = author;
         this.title = title;
         this.content = content;
@@ -78,7 +75,7 @@ public class Post {
     }
 
 
-    public void setAuthor(Account author) {
+    public void setAuthor(AccountEntity author) {
         this.author = author;
     }
 

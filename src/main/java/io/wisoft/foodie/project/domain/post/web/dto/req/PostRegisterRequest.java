@@ -1,14 +1,14 @@
-package io.wisoft.foodie.project.web.dto.req;
+package io.wisoft.foodie.project.domain.post.web.dto.req;
 
-import io.wisoft.foodie.project.domain.account.Account;
-import io.wisoft.foodie.project.domain.post.Post;
+import io.wisoft.foodie.project.domain.account.persistance.AccountEntity;
+import io.wisoft.foodie.project.domain.post.persistance.PostEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class PostRegisterRequestDto {
+public class PostRegisterRequest {
 
     private Long authorId;
     private String title;
@@ -16,14 +16,14 @@ public class PostRegisterRequestDto {
 
     //Test에서 사용
     @Builder
-    public PostRegisterRequestDto(Long authorId, String title, String content) {
+    public PostRegisterRequest(Long authorId, String title, String content) {
         this.authorId = authorId;
         this.title = title;
         this.content = content;
     }
 
-    public Post toEntity(Account author){
-        return Post.builder()
+    public PostEntity toEntity(AccountEntity author){
+        return io.wisoft.foodie.project.domain.post.persistance.PostEntity.builder()
                 .author(author)
                 .title(title)
                 .content(content)

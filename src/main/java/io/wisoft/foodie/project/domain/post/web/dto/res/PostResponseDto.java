@@ -1,6 +1,6 @@
-package io.wisoft.foodie.project.web.dto;
+package io.wisoft.foodie.project.domain.post.web.dto.res;
 
-import io.wisoft.foodie.project.domain.post.Post;
+import io.wisoft.foodie.project.domain.post.persistance.PostEntity;
 import lombok.Getter;
 
 @Getter
@@ -11,7 +11,7 @@ public class PostResponseDto {
     private String content;
     private Long authorId;
 
-    public PostResponseDto(Post entity) {
+    public PostResponseDto(PostEntity entity) {
         this.postId = entity.getId();
         this.title = entity.getTitle();
         this.content = entity.getContent();

@@ -1,13 +1,13 @@
-package io.wisoft.foodie.project.service;
+package io.wisoft.foodie.project.domain.account.application;
 
-import io.wisoft.foodie.project.domain.account.Account;
-import io.wisoft.foodie.project.domain.account.AccountRepository;
+import io.wisoft.foodie.project.domain.account.persistance.AccountEntity;
+import io.wisoft.foodie.project.domain.account.persistance.AccountRepository;
 import io.wisoft.foodie.project.handler.exception.AccountNotFoundException;
-import io.wisoft.foodie.project.web.dto.AccountDto;
-import io.wisoft.foodie.project.web.dto.req.SignInRequest;
-import io.wisoft.foodie.project.web.dto.req.SignUpRequest;
-import io.wisoft.foodie.project.web.dto.res.SignInResponse;
-import io.wisoft.foodie.project.web.dto.res.SignUpResponse;
+import io.wisoft.foodie.project.domain.account.Account;
+import io.wisoft.foodie.project.domain.account.web.dto.req.SignInRequest;
+import io.wisoft.foodie.project.domain.account.web.dto.req.SignUpRequest;
+import io.wisoft.foodie.project.domain.account.web.dto.res.SignInResponse;
+import io.wisoft.foodie.project.domain.account.web.dto.res.SignUpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,31 +25,31 @@ public class AuthService {
     @Transactional
     public SignUpResponse signUp(final SignUpRequest request){
 
-        AccountDto accountDto = new AccountDto(
+        Account account = new Account(
                 request.getEmail(),
                 request.getPassword(),
                 request.getNickname()
         );
 
-        accountDto = accountRepository.save(Account.from(accountDto))
+        account = accountRepository.save(AccountEntity.from(account))
                 .toDomain();
 
-        return new SignUpResponse(accountDto.getId());
+        return new SignUpResponse(account.getId());
 
     }
 
     @Transactional(readOnly = true)
     public SignInResponse signIn(final SignInRequest request){
 
-        final AccountDto accountDto = accountRepository.findByEmail(request.getEmail())
+        final Account account = accountRepository.findByEmail(request.getEmail())
                 .orElseThrow(
                         () -> new AccountNotFoundException(request.getEmail() + "에 해당하는 사용자를 찾을 수 없습니다.")
                 )
                 .toDomain();
 
-        accountDto.checkPassword(request.getPassword());
+        account.checkPassword(request.getPassword());
 
-        return new SignInResponse(accountDto.getId());
+        return new SignInResponse(account.getId());
 
     }
 

@@ -1,6 +1,6 @@
-package io.wisoft.foodie.project.domain;
+package io.wisoft.foodie.project.domain.post.persistance;
 
-import io.wisoft.foodie.project.domain.account.Account;
+import io.wisoft.foodie.project.domain.account.persistance.AccountEntity;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
@@ -20,13 +20,13 @@ public class Grade {
     private String name;
 
     @OneToMany(mappedBy = "grade")
-    private List<Account> accounts = new ArrayList<>();
+    private List<AccountEntity> accountEntities = new ArrayList<>();
 
 
     @Builder
-    public Grade(Long id, String name, List<Account> accounts) {
+    public Grade(Long id, String name, List<AccountEntity> accountEntities) {
         this.id = id;
         this.name = name;
-        this.accounts = accounts;
+        this.accountEntities = accountEntities;
     }
 }

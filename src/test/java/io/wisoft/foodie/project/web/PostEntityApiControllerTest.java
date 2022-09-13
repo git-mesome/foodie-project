@@ -1,8 +1,8 @@
 package io.wisoft.foodie.project.web;
 
-import io.wisoft.foodie.project.domain.post.Post;
-import io.wisoft.foodie.project.domain.post.PostRepository;
-import io.wisoft.foodie.project.web.dto.req.PostRegisterRequestDto;
+import io.wisoft.foodie.project.domain.post.persistance.PostEntity;
+import io.wisoft.foodie.project.domain.post.persistance.PostRepository;
+import io.wisoft.foodie.project.domain.post.web.dto.req.PostRegisterRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class PostApiControllerTest {
+class PostEntityApiControllerTest {
 
     @LocalServerPort
     private int port;
@@ -40,7 +40,7 @@ class PostApiControllerTest {
         String title = "title";
         String content = "content";
 
-        PostRegisterRequestDto requestDto = PostRegisterRequestDto.builder()
+        PostRegisterRequest requestDto = PostRegisterRequest.builder()
                 .authorId(1234L)
                 .title(title)
                 .content(content)
@@ -55,7 +55,7 @@ class PostApiControllerTest {
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).isGreaterThan(0L);
 
-        List<Post> all = postRepository.findAll();
+        List<PostEntity> all = postRepository.findAll();
         assertThat(all.get(0).getTitle()).isEqualTo(title);
         assertThat(all.get(0).getContent()).isEqualTo(content);
 
