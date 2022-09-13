@@ -1,72 +1,41 @@
 package io.wisoft.foodie.project.domain.account;
 
-import io.wisoft.foodie.project.domain.Grade;
-import io.wisoft.foodie.project.domain.post.Post;
-import io.wisoft.foodie.project.web.dto.AccountDto;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import net.minidev.json.annotate.JsonIgnore;
-import org.springframework.test.context.support.AnnotationConfigContextLoaderUtils;
-
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
-@NoArgsConstructor
-@Entity
-@Table(name = "account")
 public class Account {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private final Long id;
 
-    @Column(name = "email")
-    private String email;
+    private final String email;
 
-    @JsonIgnore
-    private String password;
+    private final String password;
 
-    @Column(name="nickname")
-    private String nickName;
+    private final String nickName;
 
-    private String phoneNumber;
+    public Account(final String email,
+                   final String password,
+                   final String nickName
+    ) {
+        this(null, email, password, nickName);
+    }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "grade_id")
-    private Grade grade;
-
-    @OneToMany(mappedBy = "author")
-    private final List<Post> post = new ArrayList<Post>();
-
-
-    public Account(final String email, final String password, final String nickName) {
-
+    public Account(final Long id,
+                   final String email,
+                   final String password,
+                   final String nickName
+    ) {
+        this.id = id;
         this.email = email;
         this.password = password;
         this.nickName = nickName;
-        this.grade = Grade.builder()
-                .id(1L)
-                .name("짱").build();
-
     }
 
-    public static Account from(final AccountDto accountDto){
-        return new Account(
-                accountDto.getEmail(),
-                accountDto.getPassword(),
-                accountDto.getNickName()
-        );
-    }
+    public void checkPassword(final String password) {
+        if (!this.password.equals(password)) {
+            throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
+        }
 
-    public AccountDto toDomain() {
-        return new AccountDto(
-                this.id,
-                this.email,
-                this.password,
-                this.nickName
-        );
     }
 
 }
