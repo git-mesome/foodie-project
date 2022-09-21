@@ -10,4 +10,6 @@ public interface AccountRepository extends JpaRepository<AccountEntity,Long> {
 
     Optional<AccountEntity> findByEmail(final String email); //Optional
 
+    Optional<AccountEntity> findByNickName(final String nickName);
+
 }

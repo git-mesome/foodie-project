@@ -6,10 +6,7 @@ import io.wisoft.foodie.project.domain.account.application.AccountService;
 import io.wisoft.foodie.project.domain.account.web.dto.res.FindAccountResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -40,5 +37,11 @@ public class AccountController {
         );
     }
 
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<FindAccountResponse> deleteAccount(@PathVariable("id") @Valid final Long accountId){
+//        return ResponseEntity.ok(
+//                accountService.deleteAccount(accountId)
+//        );
+//    }
 
 }

@@ -1,30 +1,32 @@
 package io.wisoft.foodie.project.domain.post.web.dto.req;
 
-import io.wisoft.foodie.project.domain.account.persistance.AccountEntity;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.wisoft.foodie.project.domain.account.Account;
+import io.wisoft.foodie.project.domain.post.Post;
 import io.wisoft.foodie.project.domain.post.persistance.PostEntity;
-import lombok.Builder;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostRegisterRequest {
 
-    private Long authorId;
+    @NotBlank(message = "제목은 필수 항목입니다.")
+    @Size(max = 500, message = "제목은 499자를 초과할 수 없습니다.")
     private String title;
+
+    @NotBlank(message = "내용을 작성해주세요.")
     private String content;
 
-    //Test에서 사용
-    @Builder
-    public PostRegisterRequest(Long authorId, String title, String content) {
-        this.authorId = authorId;
-        this.title = title;
-        this.content = content;
-    }
+    @JsonProperty("post_image_path")
+    private String postImagePath;
 
-    public PostEntity toEntity(AccountEntity author){
-        return io.wisoft.foodie.project.domain.post.persistance.PostEntity.builder()
-                .author(author)
+    public PostEntity toEntity(){
+        return PostEntity.builder()
                 .title(title)
                 .content(content)
                 .build();

@@ -5,6 +5,7 @@ spring:
       dev:
         - dev-db
         - dev-jpa
+        - s3
       prod:
         - prod-db
         - prod-jpa

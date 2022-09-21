@@ -2,15 +2,21 @@ package io.wisoft.foodie.project.domain.post.application;
 
 import io.wisoft.foodie.project.domain.account.persistance.AccountEntity;
 import io.wisoft.foodie.project.domain.account.persistance.AccountRepository;
+import io.wisoft.foodie.project.domain.image.persistance.ImageRepository;
+import io.wisoft.foodie.project.domain.image.persistance.PostImage;
+import io.wisoft.foodie.project.domain.post.Post;
 import io.wisoft.foodie.project.domain.post.persistance.PostEntity;
 import io.wisoft.foodie.project.domain.post.persistance.PostRepository;
 import io.wisoft.foodie.project.domain.post.web.dto.req.PostRegisterRequest;
-import io.wisoft.foodie.project.domain.post.web.dto.res.PostResponseDto;
+import io.wisoft.foodie.project.domain.post.web.dto.res.FindByPostIdResponse;
+import io.wisoft.foodie.project.domain.post.web.dto.res.RegisterPostResponse;
 import io.wisoft.foodie.project.domain.post.web.dto.req.PostUpdateRequest;
+import io.wisoft.foodie.project.domain.image.S3Util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -19,16 +25,30 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final AccountRepository accountRepository;
+    private final ImageRepository imageRepository;
+    private final S3Util s3Util;
 
-    @Transactional
-    public Long registerPost(PostRegisterRequest requestDto) {
-
-        AccountEntity author = accountRepository.findById(requestDto.getAuthorId())
-                .orElseThrow();
-
-        return postRepository.save(requestDto.toEntity(author)).getId();
-
-    }
+//    @Transactional
+//    public RegisterPostResponse registerPost(final PostRegisterRequest request, List<String> imagePath) {
+//
+//        //Todo 로그인한 유저만 게시글 작성
+////        AccountEntity account = accountRepository.findByNickName();
+//
+//        PostEntity post = postRepository.save(PostEntity.builder()
+//                .title(request.getTitle())
+//                .content(request.getContent())
+//                .build());
+//
+//        List<String> imageList = new ArrayList<>();
+//
+//        for (String imageUrl : imagePath) {
+//            PostImage image = new PostImage(post, imageUrl);
+//            imageRepository.save(image);
+//            imageList.add(image.getPostImagePath());
+//        }
+//
+//
+//    }
 
     @Transactional
     public Long updatePost(Long id, PostUpdateRequest requestDto) {
@@ -41,11 +61,11 @@ public class PostService {
 
     }
 
-    public PostResponseDto findByPostId(Long id){
+    public FindByPostIdResponse findByPostId(Long id) {
 
-        PostEntity entity = postRepository.findById(id).orElseThrow(()->new IllegalArgumentException("해당 게시글이 없습니다. id="+id));
+        PostEntity entity = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
 
-        return new PostResponseDto(entity);
+        return new FindByPostIdResponse(entity);
 
     }
 

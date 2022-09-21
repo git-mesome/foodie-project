@@ -1,5 +1,6 @@
 package io.wisoft.foodie.project.domain.account.persistance;
 
+import io.wisoft.foodie.project.domain.BaseTimeEntity;
 import io.wisoft.foodie.project.domain.post.persistance.Grade;
 import io.wisoft.foodie.project.domain.account.Account;
 import io.wisoft.foodie.project.domain.post.persistance.PostEntity;
@@ -15,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "account")
-public class AccountEntity {
+public class AccountEntity extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +24,6 @@ public class AccountEntity {
 
     @Column(name = "email")
     private String email;
-
     @JsonIgnore
     private String password;
 

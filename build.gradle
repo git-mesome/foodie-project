@@ -26,6 +26,10 @@ dependencies {
 	implementation 'org.jetbrains:annotations:23.0.0'
 	implementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.springframework.boot:spring-boot-devtools:2.7.3'
+	implementation 'com.amazonaws:aws-java-sdk:1.12.300'
+
+	compileOnly 'org.springframework.cloud:spring-cloud-aws:2.2.6.RELEASE'
+
 	compileOnly 'org.projectlombok:lombok'
 	compileOnly 'com.h2database:h2'
 	runtimeOnly 'org.postgresql:postgresql'

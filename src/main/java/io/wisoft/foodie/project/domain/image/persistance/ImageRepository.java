@@ -1,6 +1,5 @@
 package io.wisoft.foodie.project.domain.image.persistance;
 
-import io.wisoft.foodie.project.domain.image.Image;
 import io.wisoft.foodie.project.domain.post.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

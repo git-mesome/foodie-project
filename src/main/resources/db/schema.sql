@@ -17,10 +17,10 @@ CREATE TABLE account
 (
     id           BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     email        VARCHAR(254) UNIQUE NOT NULL,
-    password     VARCHAR(20)  NOT NULL,
-    nickname     VARCHAR(20)  NOT NULL,
+    password     VARCHAR(20)         NOT NULL,
+    nickname     VARCHAR(20)         NOT NULL,
     phone_number VARCHAR(15),
-    grade_id     INTEGER      NOT NULL,
+    grade_id     INTEGER             NOT NULL,
     CONSTRAINT account_grade_fkey FOREIGN KEY (grade_id) REFERENCES grade (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -51,13 +51,13 @@ CREATE TABLE post
     content         TEXT         NOT NULL,
     category_id     INTEGER,
     hit             INTEGER,
-    expiration_date DATE         NOT NULL,
+    expiration_date DATE,
     create_date     TIMESTAMP    NOT NULL DEFAULT NOW(),
     update_date     TIMESTAMP,
     taker_id        BIGINT,
-    deal_status     VARCHAR(10)  NOT NULL,
+    deal_status     VARCHAR(10),
     last_deal_date  TIMESTAMP,
-    post_type       VARCHAR(10)  NOT NULL,
+    post_type       VARCHAR(10),
     CONSTRAINT post_writer_fkey FOREIGN KEY (author_id) REFERENCES account (id) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT post_category_fkey FOREIGN KEY (category_id) REFERENCES category (id) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT post_taker_fkey FOREIGN KEY (taker_id) REFERENCES account (id) ON DELETE CASCADE ON UPDATE CASCADE
@@ -67,7 +67,7 @@ CREATE TABLE post_image
 (
     id        BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     post_id   BIGINT  NOT NULL,
-    image_url VARCHAR NOT NULL,
+    post_image_path VARCHAR NOT NULL,
     CONSTRAINT image_post_fkey FOREIGN KEY (post_id) REFERENCES post (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
