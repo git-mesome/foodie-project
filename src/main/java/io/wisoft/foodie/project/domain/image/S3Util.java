@@ -2,10 +2,9 @@ package io.wisoft.foodie.project.domain.image;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.*;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,17 +14,21 @@ import java.io.InputStream;
 import java.util.*;
 
 @Slf4j
-@Component
-@RequiredArgsConstructor
 @Service
 public class S3Util {
 
     private final AmazonS3Client amazonS3Client;
 
+    @Autowired
+    public S3Util(final AmazonS3Client amazonS3Client) {
+        this.amazonS3Client = amazonS3Client;
+    }
+
     @Value("${cloud.aws.s3.bucket}")
     public String bucket;
 
-    public List<String> uploadFileList(List<MultipartFile> multipartFiles, String dirName) throws IOException {
+    public List<String> uploadFileList(final List<MultipartFile> multipartFiles,
+                                       final String dirName) throws IOException {
 
         //Todo 파일 업로드 개수 지정
 
@@ -39,10 +42,11 @@ public class S3Util {
 
     }
 
-    public String uploadFile(MultipartFile file, String dirName) throws IOException {
+    public String uploadFile(final MultipartFile file,
+                             final String dirName) throws IOException {
 
-
-        String fileName = createFileName(StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename())), dirName);
+        final String fileName = createFileName(StringUtils
+                .cleanPath(Objects.requireNonNull(file.getOriginalFilename())), dirName);
 
         ObjectMetadata objectMetadata = new ObjectMetadata();
 
@@ -61,24 +65,24 @@ public class S3Util {
     }
 
 
-    private String putS3(InputStream inputStream, String fileName, ObjectMetadata objectMetadata) {
+    private String putS3(final InputStream inputStream,
+                         final String fileName,
+                         final ObjectMetadata objectMetadata) {
 
         amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
 
         return amazonS3Client.getUrl(bucket, fileName).toString();
+
     }
 
-    private String createFileName(String fileName, String dirName) {
+    private String createFileName(final String fileName, final String dirName) {
         return dirName + "/" + UUID.randomUUID().toString().concat(getFileExtension(fileName));
     }
 
 
-
-
-
-    public void deleteFile(String fileName) {
-        DeleteObjectRequest request = new DeleteObjectRequest(bucket, fileName);
+    public void deleteFile(final String fileName) {
+        final DeleteObjectRequest request = new DeleteObjectRequest(bucket, fileName);
         amazonS3Client.deleteObject(request);
     }
 
@@ -93,9 +97,9 @@ public class S3Util {
 //
 //    }
 
-    private String getFileExtension(String fileName) {
+    private String getFileExtension(final String fileName) {
 
-        ArrayList<String> fileValidate = new ArrayList<>();
+        final ArrayList<String> fileValidate = new ArrayList<>();
 
         fileValidate.add(".jpg");
         fileValidate.add(".jpeg");
@@ -104,7 +108,7 @@ public class S3Util {
         fileValidate.add(".JPEG");
         fileValidate.add(".PNG");
 
-        String idxFileName = fileName.substring(fileName.lastIndexOf("."));
+        final String idxFileName = fileName.substring(fileName.lastIndexOf("."));
 
         if (!fileValidate.contains(idxFileName)) {
             throw new IllegalArgumentException("이미지 파일 형식이 아닙니다.");
