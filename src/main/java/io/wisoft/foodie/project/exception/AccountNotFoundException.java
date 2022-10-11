@@ -1,4 +1,4 @@
-package io.wisoft.foodie.project.handler.exception;
+package io.wisoft.foodie.project.exception;
 
 public class AccountNotFoundException extends RuntimeException {
 
