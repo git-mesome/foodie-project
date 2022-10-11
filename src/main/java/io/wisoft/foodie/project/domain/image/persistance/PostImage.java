@@ -1,7 +1,6 @@
 package io.wisoft.foodie.project.domain.image.persistance;
 
-import io.wisoft.foodie.project.domain.post.Post;
-import io.wisoft.foodie.project.domain.post.persistance.PostEntity;
+import io.wisoft.foodie.project.domain.post.persistance.Post;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
@@ -22,12 +21,12 @@ public class PostImage {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", referencedColumnName = "id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private PostEntity post;
+    private Post post;
 
     @Column(name = "post_image_path")
     private String postImagePath;
 
-    public PostImage(final PostEntity post, final String postImagePath) {
+    public PostImage(final Post post, final String postImagePath) {
         this.post = post;
         this.postImagePath = postImagePath;
     }
