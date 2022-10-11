@@ -6,6 +6,7 @@ spring:
         - dev-db
         - dev-jpa
         - s3
+        - oauth2
       prod:
         - prod-db
         - prod-jpa

@@ -1,13 +1,11 @@
 package io.wisoft.foodie.project.domain.account.application;
 
-import io.wisoft.foodie.project.domain.account.persistance.AccountEntity;
+import io.wisoft.foodie.project.domain.account.persistance.Account;
 import io.wisoft.foodie.project.domain.account.persistance.AccountRepository;
-import io.wisoft.foodie.project.handler.exception.AccountNotFoundException;
-import io.wisoft.foodie.project.domain.account.Account;
-import io.wisoft.foodie.project.domain.account.web.dto.req.SignInRequest;
+import io.wisoft.foodie.project.domain.account.web.dto.req.FindByOauthIdRequest;
 import io.wisoft.foodie.project.domain.account.web.dto.req.SignUpRequest;
-import io.wisoft.foodie.project.domain.account.web.dto.res.SignInResponse;
 import io.wisoft.foodie.project.domain.account.web.dto.res.SignUpResponse;
+import io.wisoft.foodie.project.domain.account.web.dto.res.SignInResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,33 +21,34 @@ public class AuthService {
     }
 
     @Transactional
-    public SignUpResponse signUp(final SignUpRequest request){
+    public SignUpResponse signUp(final SignUpRequest request) {
 
-        Account account = new Account(
-                request.getEmail(),
-                request.getPassword(),
-                request.getNickname()
-        );
+        final Account account = accountRepository.save(new Account(
+                request.oauthId(),
+                request.email(),
+                request.profileImagePath(),
+                request.nickname(),
+                request.phoneNumber(),
+                request.getGrade()
+        ));
 
-        account = accountRepository.save(AccountEntity.from(account))
-                .toDomain();
-
-        return new SignUpResponse(account.getId());
+        return new SignUpResponse(
+                account.getId(),
+                account.getNickname(),
+                account.getProfileImagePath());
 
     }
 
     @Transactional(readOnly = true)
-    public SignInResponse signIn(final SignInRequest request){
+    public SignInResponse signIn(final FindByOauthIdRequest request) {
 
-        final Account account = accountRepository.findByEmail(request.getEmail())
-                .orElseThrow(
-                        () -> new AccountNotFoundException(request.getEmail() + "에 해당하는 사용자를 찾을 수 없습니다.")
-                )
-                .toDomain();
+        final Account account = accountRepository.findByOauthId(request.oauthId())
+                .orElseThrow(() -> new IllegalStateException("없는 사용자 입니다."));
 
-        account.checkPassword(request.getPassword());
-
-        return new SignInResponse(account.getId());
+        return new SignInResponse(
+                account.getId(),
+                account.getNickname(),
+                account.getProfileImagePath());
 
     }
 
