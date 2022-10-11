@@ -1,15 +1,14 @@
 package io.wisoft.foodie.project.domain.post.persistance;
 
 import io.wisoft.foodie.project.domain.BaseTimeEntity;
-import io.wisoft.foodie.project.domain.account.persistance.AccountEntity;
+import io.wisoft.foodie.project.domain.account.persistance.Account;
 
 import io.wisoft.foodie.project.domain.image.persistance.PostImage;
-import io.wisoft.foodie.project.domain.post.Post;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -17,16 +16,17 @@ import java.util.*;
 
 @Getter
 @NoArgsConstructor
+@DynamicInsert
 @Entity
 @Table(name = "post")
-public class PostEntity extends BaseTimeEntity {
+public class Post extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", referencedColumnName = "id")
-    private AccountEntity author;
+    private Account author;
 
     @Column(name = "title", length = 500, nullable = false)
     private String title;
@@ -42,11 +42,11 @@ public class PostEntity extends BaseTimeEntity {
     private int hit;
 
     @Column(name = "expiration_date")
-    private Date expirationDate;
+    private String expirationDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "taker_id")
-    private AccountEntity taker;
+    private Account taker;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "deal_status")
@@ -63,33 +63,33 @@ public class PostEntity extends BaseTimeEntity {
     @OneToMany(mappedBy = "post")
     private List<PostImage> postImages = new ArrayList<>();
 
-    @Builder
-    public PostEntity( String title, String content) {
+    public Post(final Account author,
+                final String title,
+                final String content,
+                final Category category,
+                final String expirationDate,
+                final PostType postType) {
+
+        this.author = author;
         this.title = title;
         this.content = content;
+        this.category = category;
+        this.expirationDate = expirationDate;
+        this.postType = postType;
+
     }
 
-    public static PostEntity from(final Post post) {
-        return new PostEntity(
-                post.getTitle(),
-                post.getContent()
-        );
-    }
-
-    public Post toDomain() {
-        return new Post(
-                this.id,
-                this.title,
-                this.content
-        );
-    }
-
-    public void update(String title, String content) {
+    public void update(final String title, final String content) {
 
         this.title = title;
         this.content = content;
 
     }
+
+//    public void mappingCategory(Category category) {
+//        this.category = category;
+//        category.mappingPost(this);
+//    }
 
 
 }
