@@ -1,1 +1,1 @@
-INSERT INTO grade values (1,'짱');
+INSERT INTO category(name) values ('육류'),('과일'),('통조림'),('간식'),('라면'),('냉동식품'),('야채');

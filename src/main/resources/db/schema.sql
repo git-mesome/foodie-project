@@ -1,37 +1,25 @@
-DROP TABLE IF EXISTS grade CASCADE;
 DROP TABLE IF EXISTS account CASCADE;
-
-CREATE TABLE grade
-(
-    id   INTEGER PRIMARY KEY,
-    name VARCHAR(20)
-);
 
 CREATE TABLE category
 (
     id   BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    name VARCHAR(50)
+    name VARCHAR(50) UNIQUE NOT NULL
 );
 
 CREATE TABLE account
 (
-    id           BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    email        VARCHAR(254) UNIQUE NOT NULL,
-    password     VARCHAR(20)         NOT NULL,
-    nickname     VARCHAR(20)         NOT NULL,
-    phone_number VARCHAR(15),
-    grade_id     INTEGER             NOT NULL,
-    CONSTRAINT account_grade_fkey FOREIGN KEY (grade_id) REFERENCES grade (id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-CREATE TABLE address
-(
-    id            BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    account_id    BIGINT     NOT NULL,
-    si_do         VARCHAR(5) NOT NULL,
-    gun_gu        VARCHAR(5) NOT NULL,
-    don_eup_myeon VARCHAR(5) NOT NULL,
-    CONSTRAINT address_account_fkey FOREIGN KEY (account_id) REFERENCES account (id) ON DELETE CASCADE ON UPDATE CASCADE
+    id                 BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    oauth_id           VARCHAR UNIQUE NOT NULL,
+    email              VARCHAR(254)   NOT NULL,
+    profile_image_path VARCHAR        NOT NULL,
+    nickname           VARCHAR(20)    NOT NULL,
+    phone_number       VARCHAR(15)    NOT NULL,
+    grade              VARCHAR        NOT NULL DEFAULT 'VIP',
+    si_do              VARCHAR(14),
+    si_gun_gu          VARCHAR(10),
+    eup_myeon_dong     VARCHAR(10),
+    create_date        TIMESTAMP               DEFAULT NOW(),
+    update_date        TIMESTAMP
 );
 
 CREATE TABLE block
@@ -51,11 +39,11 @@ CREATE TABLE post
     content         TEXT         NOT NULL,
     category_id     INTEGER,
     hit             INTEGER,
-    expiration_date DATE,
+    expiration_date VARCHAR,
     create_date     TIMESTAMP    NOT NULL DEFAULT NOW(),
     update_date     TIMESTAMP,
     taker_id        BIGINT,
-    deal_status     VARCHAR(10),
+    deal_status     VARCHAR(10)  NOT NULL DEFAULT 'YET',
     last_deal_date  TIMESTAMP,
     post_type       VARCHAR(10),
     CONSTRAINT post_writer_fkey FOREIGN KEY (author_id) REFERENCES account (id) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -65,8 +53,8 @@ CREATE TABLE post
 
 CREATE TABLE post_image
 (
-    id        BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    post_id   BIGINT  NOT NULL,
+    id              BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    post_id         BIGINT  NOT NULL,
     post_image_path VARCHAR NOT NULL,
     CONSTRAINT image_post_fkey FOREIGN KEY (post_id) REFERENCES post (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
