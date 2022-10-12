@@ -42,8 +42,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         //HandlerInterceptor 객체를 설정, 로그인 상태인지 확인되면 기능과 연결된 url 등록
         registry.addInterceptor(jwtAuthInterceptor)
                 .addPathPatterns("/posts/**")
-                .addPathPatterns("/auth/test/**")
-                .excludePathPatterns("posts/find");
+                .excludePathPatterns("/auth/**");
 
     }
 
