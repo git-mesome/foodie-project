@@ -38,8 +38,7 @@ public class Post extends BaseTimeEntity {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @Column(name = "hit")
-    private int hit;
+    private Integer hit;
 
     @Column(name = "expiration_date")
     private String expirationDate;

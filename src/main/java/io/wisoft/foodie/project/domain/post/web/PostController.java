@@ -1,8 +1,10 @@
 package io.wisoft.foodie.project.domain.post.web;
 
+import io.wisoft.foodie.project.domain.post.persistance.PostType;
 import io.wisoft.foodie.project.domain.post.web.dto.req.UpdatePostRequest;
 import io.wisoft.foodie.project.domain.post.web.dto.req.RegisterPostRequest;
-import io.wisoft.foodie.project.domain.post.web.dto.res.FindByPostIdResponse;
+import io.wisoft.foodie.project.domain.post.web.dto.res.FindAllPostsResponse;
+import io.wisoft.foodie.project.domain.post.web.dto.res.FindPostDetailResponse;
 import io.wisoft.foodie.project.domain.post.web.dto.res.RegisterPostResponse;
 import io.wisoft.foodie.project.domain.post.application.PostService;
 import io.wisoft.foodie.project.domain.image.S3Util;
@@ -27,6 +29,32 @@ public class PostController {
     private final PostService postService;
     private final S3Util s3Util;
 
+    @GetMapping
+    public ResponseEntity<List<FindAllPostsResponse>> findAllPosts(@RequestParam(value = "postType") final String postType) {
+        return ResponseEntity.ok(postService.findAllPosts(PostType.valueOf(postType.toUpperCase())));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<FindPostDetailResponse> findPostDetail(@PathVariable Long id) {
+
+        return ResponseEntity
+                .ok(postService.findPostDetail(id));
+
+    }
+
+    @PostMapping
+    public ResponseEntity<RegisterPostResponse> registerPost(@RequestPart(value = "imagePath", required = false) final Optional<List<MultipartFile>> multipartFiles,
+                                                             @RequestPart(value = "postContents") final RegisterPostRequest registerRequest,
+                                                             @AccountIdentifier final Long authorId) throws IOException {
+
+        List<String> imagePaths = s3Util.uploadFileList(multipartFiles.orElse(Collections.emptyList()), "post");
+
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(postService.registerPost(registerRequest, imagePaths, authorId));
+
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Long> update(@PathVariable Long id, @RequestBody UpdatePostRequest request) {
 
@@ -35,31 +63,5 @@ public class PostController {
 
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<FindByPostIdResponse> findById(@PathVariable Long id) {
-
-        return ResponseEntity
-                .ok(postService.findByPostId(id));
-
-    }
-
-    @PostMapping
-    public ResponseEntity<RegisterPostResponse> register(@RequestPart(value = "imagePath", required = false)final Optional<List<MultipartFile>> multipartFiles,
-                                                         @RequestPart(value = "postContents") final RegisterPostRequest registerRequest,
-                                                         @AccountIdentifier final Long authorId) throws IOException {
-
-        List<String> imagePaths = s3Util.uploadFileList(multipartFiles.orElse(Collections.emptyList()), "post");
-
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(postService.registerPost(registerRequest, imagePaths, authorId));
-
-    }
-
-//    @GetMapping
-//    public ResponseEntity<PostListResponse> findAllDesc(){
-//
-//        return ResponseEntity()
-//
-//    }
 
 }

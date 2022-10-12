@@ -14,14 +14,13 @@ public record FindPostDetailResponse(Long postId,
                                      String title,
                                      String content,
                                      Integer hit,
-                                     Integer postLikes,
                                      String siDo,
                                      String siGunGu,
                                      String eupMyeonDong,
                                      DealStatus dealStatus,
-                                     @JsonFormat(shape = JsonFormat.Shape.STRING,
-                                             pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul") LocalDateTime createDate,
+                                     LocalDateTime createDate,
                                      List<String> postImagePath) {
 
+    //Todo Integer postLikes
 
 }
