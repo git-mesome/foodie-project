@@ -1,6 +1,0 @@
-spring:
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://foodie-webservice.crwestfjcle8.ap-northeast-2.rds.amazonaws.com:5432/foodie
-    username: minseo
-    password: #Supabase Password
