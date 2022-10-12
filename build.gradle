@@ -38,7 +38,7 @@ dependencies {
 	compileOnly 'org.springframework.cloud:spring-cloud-aws:2.2.6.RELEASE'
 
 
-	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
 	compileOnly 'com.h2database:h2'
 	runtimeOnly 'org.postgresql:postgresql'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
