@@ -25,6 +25,10 @@ public class JwtAuthInterceptor implements HandlerInterceptor {
                              final HttpServletResponse response,
                              final Object handler) {
 
+        if (request.getMethod().equals("GET")) {
+            return true;
+        }
+
         final String accessToken = authorizationExtractor.extract(request, "Bearer");
 
         if (accessToken.isEmpty()) {
