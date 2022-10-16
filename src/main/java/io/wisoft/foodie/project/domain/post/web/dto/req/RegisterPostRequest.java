@@ -13,6 +13,6 @@ public record RegisterPostRequest(@NotBlank(message = "제목은 필수 항목�
                                   String postType) {
 
     public PostType getPostType() {
-        return PostType.valueOf(this.postType);
+        return PostType.valueOf(this.postType.toUpperCase());
     }
 }
