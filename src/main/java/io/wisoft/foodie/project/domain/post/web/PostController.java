@@ -31,14 +31,14 @@ public class PostController {
 
     @GetMapping
     public ResponseEntity<List<FindAllPostsResponse>> findAllPosts(@RequestParam(value = "postType") final String postType) {
-        return ResponseEntity.ok(postService.findAllPosts(PostType.valueOf(postType.toUpperCase())));
+        return ResponseEntity.ok(postService.findAll(PostType.valueOf(postType.toUpperCase())));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<FindPostDetailResponse> findPostDetail(@PathVariable Long id) {
 
         return ResponseEntity
-                .ok(postService.findPostDetail(id));
+                .ok(postService.findById(id));
 
     }
 
@@ -51,7 +51,7 @@ public class PostController {
 
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(postService.registerPost(registerRequest, imagePaths, authorId));
+                .body(postService.register(registerRequest, imagePaths, authorId));
 
     }
 
@@ -59,7 +59,7 @@ public class PostController {
     public ResponseEntity<Long> update(@PathVariable Long id, @RequestBody UpdatePostRequest request) {
 
         return ResponseEntity
-                .ok(postService.updatePost(id, request));
+                .ok(postService.update(id, request));
 
     }
 
