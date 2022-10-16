@@ -3,6 +3,7 @@ package io.wisoft.foodie.project.domain.account.application;
 import io.wisoft.foodie.project.domain.account.persistance.Account;
 import io.wisoft.foodie.project.domain.account.persistance.AccountRepository;
 import io.wisoft.foodie.project.domain.account.web.dto.req.UpdateAccountRequest;
+import io.wisoft.foodie.project.domain.account.web.dto.res.FindAccountInfoResponse;
 import io.wisoft.foodie.project.domain.account.web.dto.res.UpdateAccountResponse;
 import io.wisoft.foodie.project.exception.AccountNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,29 @@ public class AccountService {
         this.accountRepository = accountRepository;
     }
 
+    @Transactional(readOnly = true)
+    public FindAccountInfoResponse findById(final Long accountId) {
 
-    public UpdateAccountResponse updateAccountInfo(final UpdateAccountRequest request, final Long id) {
+        final Account account = accountRepository.findById(accountId)
+                .orElseThrow(
+                        () -> new AccountNotFoundException(accountId + "에 해당하는 사용자가 없습니다.")
+                );
+
+        return new FindAccountInfoResponse(
+                account.getId(),
+                account.getNickname(),
+                account.getEmail(),
+                account.getProfileImagePath(),
+                account.getPhoneNumber(),
+                account.getGrade(),
+                account.getSiDo(),
+                account.getSiGunGu(),
+                account.getEupMyeonDong()
+        );
+
+    }
+
+    public UpdateAccountResponse update(final UpdateAccountRequest request, final Long id) {
 
         final Account account = accountRepository.findById(id)
                 .orElseThrow(() -> new AccountNotFoundException("없는 사용자 입니다."));
@@ -39,7 +61,7 @@ public class AccountService {
     }
 
     @Transactional
-    public UpdateAccountResponse deleteAccount(final Long id) {
+    public UpdateAccountResponse delete(final Long id) {
         final Account account = accountRepository.findById(id)
                 .orElseThrow(() -> new AccountNotFoundException("없는 사용자 입니다."));
 
@@ -47,32 +69,5 @@ public class AccountService {
 
         return new UpdateAccountResponse(account.getId());
     }
-
-//    @Transactional(readOnly = true)
-//    public FindAccountListResponse findAccountList() {
-//
-//        return FindAccountListResponse.builder()
-//                .accountList(accountRepository.findAll().stream().map().toList())
-//                .build();
-//
-//
-//    }
-
-//    @Transactional(readOnly = true)
-//    public FindAccountResponse findAccountById(final Long accountId) {
-//
-//        final Account account = accountRepository.findById(accountId)
-//                .orElseThrow(
-//                        () -> new AccountNotFoundException(accountId + "에 해당하는 사용자가 없습니다.")
-//                )
-//                .toDomain();
-//
-//        return new FindAccountResponse(
-//                account.getEmail(),
-//                account.getNickName()
-//        );
-//
-//    }
-
 
 }
