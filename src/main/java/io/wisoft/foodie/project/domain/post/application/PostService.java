@@ -6,19 +6,17 @@ import io.wisoft.foodie.project.domain.image.persistance.ImageRepository;
 import io.wisoft.foodie.project.domain.image.persistance.PostImage;
 import io.wisoft.foodie.project.domain.post.persistance.*;
 import io.wisoft.foodie.project.domain.post.web.dto.req.RegisterPostRequest;
+import io.wisoft.foodie.project.domain.post.web.dto.req.UpdatePostRequest;
 import io.wisoft.foodie.project.domain.post.web.dto.res.FindAllPostsResponse;
 import io.wisoft.foodie.project.domain.post.web.dto.res.FindPostDetailResponse;
 import io.wisoft.foodie.project.domain.post.web.dto.res.RegisterPostResponse;
-import io.wisoft.foodie.project.domain.post.web.dto.req.UpdatePostRequest;
 import io.wisoft.foodie.project.exception.AccountNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 @Service
@@ -41,9 +39,9 @@ public class PostService {
     }
 
     @Transactional
-    public RegisterPostResponse registerPost(final RegisterPostRequest request,
-                                             final List<String> imagePath,
-                                             final Long id) {
+    public RegisterPostResponse register(final RegisterPostRequest request,
+                                         final List<String> imagePath,
+                                         final Long id) {
 
         final Account account = accountRepository.findById(id).orElseThrow(
                 () -> new AccountNotFoundException("존재하지 않는 회원정보입니다.")
@@ -72,7 +70,7 @@ public class PostService {
     }
 
     @Transactional
-    public Long updatePost(final Long id, final UpdatePostRequest requestDto) {
+    public Long update(final Long id, final UpdatePostRequest requestDto) {
 
         final Post post = postRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다. id=" + id));
@@ -83,7 +81,7 @@ public class PostService {
 
     }
 
-    public FindPostDetailResponse findPostDetail(final Long id) {
+    public FindPostDetailResponse findById(final Long id) {
         final Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
 
         return new FindPostDetailResponse(
@@ -108,7 +106,7 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<FindAllPostsResponse> findAllPosts(final PostType postType) {
+    public List<FindAllPostsResponse> findAll(final PostType postType) {
         List<Post> postList = this.postRepository.findByPostTypeOrderByCreateDateDesc(postType);
         return postList.stream()
                 .map(post -> new FindAllPostsResponse(
