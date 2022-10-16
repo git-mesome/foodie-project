@@ -35,7 +35,7 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FindPostDetailResponse> findById(@PathVariable Long id) {
+    public ResponseEntity<FindPostDetailResponse> findById(@PathVariable final Long id) {
 
         return ResponseEntity
                 .ok(postService.findById(id));
