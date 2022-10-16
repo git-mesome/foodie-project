@@ -30,12 +30,12 @@ public class PostController {
     private final S3Util s3Util;
 
     @GetMapping
-    public ResponseEntity<List<FindAllPostsResponse>> findAllPosts(@RequestParam(value = "postType") final String postType) {
+    public ResponseEntity<List<FindAllPostsResponse>> findAll(@RequestParam(value = "postType") final String postType) {
         return ResponseEntity.ok(postService.findAll(PostType.valueOf(postType.toUpperCase())));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FindPostDetailResponse> findPostDetail(@PathVariable Long id) {
+    public ResponseEntity<FindPostDetailResponse> findById(@PathVariable Long id) {
 
         return ResponseEntity
                 .ok(postService.findById(id));
@@ -43,9 +43,9 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<RegisterPostResponse> registerPost(@RequestPart(value = "imagePath", required = false) final Optional<List<MultipartFile>> multipartFiles,
-                                                             @RequestPart(value = "postContents") final RegisterPostRequest registerRequest,
-                                                             @AccountIdentifier final Long authorId) throws IOException {
+    public ResponseEntity<RegisterPostResponse> register(@RequestPart(value = "imagePath", required = false) final Optional<List<MultipartFile>> multipartFiles,
+                                                         @RequestPart(value = "postContents") final RegisterPostRequest registerRequest,
+                                                         @AccountIdentifier final Long authorId) throws IOException {
 
         List<String> imagePaths = s3Util.uploadFileList(multipartFiles.orElse(Collections.emptyList()), "post");
 
