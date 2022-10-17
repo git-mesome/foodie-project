@@ -13,13 +13,12 @@ public record FindPostDetailResponse(Long postId,
                                      String title,
                                      String content,
                                      Integer hit,
+                                     Boolean likesState,
+                                     Integer likesCount,
                                      String siDo,
                                      String siGunGu,
                                      String eupMyeonDong,
                                      DealStatus dealStatus,
                                      LocalDateTime createDate,
                                      List<String> postImagePath) {
-
-    //Todo Integer postLikes
-
 }

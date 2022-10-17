@@ -42,6 +42,9 @@ public class Post extends BaseTimeEntity {
     @Column(columnDefinition = "integer default 0", nullable = false)
     private Integer hit;
 
+    @Column(name="likes_count",columnDefinition = "integer default 0",nullable = false)
+    private Integer likesCount;
+
     @Column(name = "expiration_date")
     private String expirationDate;
 
@@ -64,7 +67,7 @@ public class Post extends BaseTimeEntity {
     @OneToMany(mappedBy = "post")
     private final List<PostImage> postImages = new ArrayList<>();
 
-    @OneToMany(mappedBy = "account")
+    @OneToMany(mappedBy = "post")
     private final List<Likes> likes = new ArrayList<>();
 
     public Post(final Account author,

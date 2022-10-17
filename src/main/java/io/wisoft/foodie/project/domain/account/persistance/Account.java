@@ -3,6 +3,7 @@ package io.wisoft.foodie.project.domain.account.persistance;
 import io.wisoft.foodie.project.domain.BaseTimeEntity;
 import io.wisoft.foodie.project.domain.post.persistance.Grade;
 import io.wisoft.foodie.project.domain.post.persistance.Post;
+import io.wisoft.foodie.project.domain.post.persistance.likes.Likes;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
@@ -49,11 +50,10 @@ public class Account extends BaseTimeEntity {
     private String eupMyeonDong;
 
     @OneToMany(mappedBy = "author")
-    private final List<Post> post;
+    private final List<Post> post = new ArrayList<>();
 
-    {
-        post = new ArrayList<Post>();
-    }
+    @OneToMany(mappedBy = "account")
+    private final List<Likes> likes = new ArrayList<>();
 
 
     public Account(final String oauthId,
