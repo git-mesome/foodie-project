@@ -38,7 +38,7 @@ CREATE TABLE post
     title           VARCHAR(500) NOT NULL,
     content         TEXT         NOT NULL,
     category_id     INTEGER,
-    hit             INTEGER,
+    hit             INTEGER      NOT NULL DEFAULT 0,
     expiration_date VARCHAR,
     create_date     TIMESTAMP    NOT NULL DEFAULT NOW(),
     update_date     TIMESTAMP,
