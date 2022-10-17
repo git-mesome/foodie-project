@@ -1,4 +1,4 @@
-package io.wisoft.foodie.project.domain.post.persistance;
+package io.wisoft.foodie.project.domain.post.persistance.category;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

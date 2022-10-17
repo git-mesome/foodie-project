@@ -5,6 +5,8 @@ import io.wisoft.foodie.project.domain.account.persistance.AccountRepository;
 import io.wisoft.foodie.project.domain.image.persistance.ImageRepository;
 import io.wisoft.foodie.project.domain.image.persistance.PostImage;
 import io.wisoft.foodie.project.domain.post.persistance.*;
+import io.wisoft.foodie.project.domain.post.persistance.category.Category;
+import io.wisoft.foodie.project.domain.post.persistance.category.CategoryRepository;
 import io.wisoft.foodie.project.domain.post.web.dto.req.RegisterPostRequest;
 import io.wisoft.foodie.project.domain.post.web.dto.req.UpdatePostRequest;
 import io.wisoft.foodie.project.domain.post.web.dto.res.FindAllPostsResponse;

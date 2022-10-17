@@ -4,7 +4,8 @@ import io.wisoft.foodie.project.domain.BaseTimeEntity;
 import io.wisoft.foodie.project.domain.account.persistance.Account;
 
 import io.wisoft.foodie.project.domain.image.persistance.PostImage;
-import lombok.Builder;
+import io.wisoft.foodie.project.domain.post.persistance.category.Category;
+import io.wisoft.foodie.project.domain.post.persistance.likes.Likes;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
@@ -61,7 +62,10 @@ public class Post extends BaseTimeEntity {
     private PostType postType;
 
     @OneToMany(mappedBy = "post")
-    private List<PostImage> postImages = new ArrayList<>();
+    private final List<PostImage> postImages = new ArrayList<>();
+
+    @OneToMany(mappedBy = "account")
+    private final List<Likes> likes = new ArrayList<>();
 
     public Post(final Account author,
                 final String title,

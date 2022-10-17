@@ -1,4 +1,6 @@
-package io.wisoft.foodie.project.domain.post.persistance;
+package io.wisoft.foodie.project.domain.post.persistance.category;
+
+import io.wisoft.foodie.project.domain.post.persistance.Post;
 
 import javax.persistence.*;
 import java.util.ArrayList;
