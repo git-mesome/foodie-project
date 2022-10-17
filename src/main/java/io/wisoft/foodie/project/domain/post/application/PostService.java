@@ -84,6 +84,8 @@ public class PostService {
     public FindPostDetailResponse findById(final Long id) {
         final Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
 
+        updateHit(post.getId());
+
         return new FindPostDetailResponse(
                 post.getId(),
                 post.getAuthor().getNickname(),
@@ -103,6 +105,11 @@ public class PostService {
                         .toList()
         );
 
+    }
+
+    @Transactional
+    public Integer updateHit(Long id) {
+        return postRepository.updateHit(id);
     }
 
     @Transactional(readOnly = true)
