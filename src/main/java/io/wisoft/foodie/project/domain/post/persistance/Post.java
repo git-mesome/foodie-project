@@ -42,7 +42,7 @@ public class Post extends BaseTimeEntity {
     @Column(columnDefinition = "integer default 0", nullable = false)
     private Integer hit;
 
-    @Column(name="likes_count",columnDefinition = "integer default 0",nullable = false)
+    @Column(name = "likes_count", columnDefinition = "integer default 0", nullable = false)
     private Integer likesCount;
 
     @Column(name = "expiration_date")
@@ -92,6 +92,11 @@ public class Post extends BaseTimeEntity {
         this.content = content;
 
     }
+
+    public void increaseHit() {
+        this.hit++;
+    }
+
 
 //    public void mappingCategory(Category category) {
 //        this.category = category;

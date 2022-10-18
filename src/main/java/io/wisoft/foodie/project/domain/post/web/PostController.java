@@ -34,16 +34,17 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<FindAllPostsResponse>> findAll(@RequestParam(value = "postType") final String postType) {
+    public ResponseEntity<List<FindAllPostsResponse>> findAll(@RequestParam(value = "postType") final String postType,
+                                                              @AccountIdentifier final Long accountId) {
         return ResponseEntity
-                .ok(postService.findAll(PostType.valueOf(postType.toUpperCase())));
+                .ok(postService.findAll(PostType.valueOf(postType.toUpperCase()), accountId));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<FindPostDetailResponse> findById(@PathVariable final Long id,
                                                            @AccountIdentifier final Long accountId) {
         return ResponseEntity
-                .ok(postService.findById(id,accountId));
+                .ok(postService.findById(id, accountId));
     }
 
     @PostMapping

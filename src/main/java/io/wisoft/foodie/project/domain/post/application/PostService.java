@@ -89,22 +89,13 @@ public class PostService {
 
     }
 
+    @Transactional
     public FindPostDetailResponse findById(final Long id, final Long accountId) {
 
         final Post post = postRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
-        final Boolean isLikes;
 
-        if (accountId == null) {
-            isLikes = false;
-        } else {
-            final Account account = accountRepository.findById(accountId)
-                    .orElseThrow(() -> new AccountNotFoundException("존재하지 않는 회원정보입니다."));
-
-            Optional<Likes> likes = likesRepository.findLikesByAccountIdAndPostId(account.getId(), post.getId());
-            isLikes = likes.isPresent();
-        }
-        updateHit(post.getId());
+        post.increaseHit();
 
         return new FindPostDetailResponse(
                 post.getId(),
@@ -115,7 +106,7 @@ public class PostService {
                 post.getContent(),
                 post.getExpirationDate(),
                 post.getHit(),
-                isLikes,
+                checkLikeStateByAccountIdAndPostId(accountId, post.getId()),
                 post.getLikesCount(),
                 post.getAuthor().getSiDo(),
                 post.getAuthor().getSiGunGu(),
@@ -131,7 +122,7 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<FindAllPostsResponse> findAll(final PostType postType) {
+    public List<FindAllPostsResponse> findAll(final PostType postType, final Long accountId) {
 
         List<Post> postList = this.postRepository.findByPostTypeOrderByCreateDateDesc(postType);
 
@@ -140,18 +131,23 @@ public class PostService {
                         post.getId(),
                         post.getAuthor().getNickname(),
                         post.getTitle(),
+                        checkLikeStateByAccountIdAndPostId(accountId, post.getId()),
+                        post.getLikesCount(),
                         post.getUpdateDate()))
                 .toList();
 
     }
 
-    public Post findOnePost(final Long postId) {
-        return postRepository.getReferenceById(postId);
-    }
+    private Boolean checkLikeStateByAccountIdAndPostId(final Long accountId, final Long postId) {
+        final Boolean likesState;
 
-    @Transactional
-    public Integer updateHit(Long id) {
-        return postRepository.updateHit(id);
+        if (accountId == null) {
+            likesState = false;
+        } else {
+            Optional<Likes> likes = likesRepository.findLikesByAccountIdAndPostId(accountId, postId);
+            likesState = likes.isPresent();
+        }
+        return likesState;
     }
 
     @Transactional
