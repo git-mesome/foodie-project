@@ -40,7 +40,7 @@ CREATE TABLE post
     category_id     INTEGER,
     hit             INTEGER      NOT NULL DEFAULT 0,
     likes_count     INTEGER      NOT NULL DEFAULT 0,
-    expiration_date VARCHAR,
+    expiration_date VARCHAR      NOT NULL,
     create_date     TIMESTAMP    NOT NULL DEFAULT NOW(),
     update_date     TIMESTAMP,
     taker_id        BIGINT,
@@ -72,9 +72,9 @@ CREATE TABLE review
 
 CREATE TABLE likes
 (
-    id          BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    account_id  BIGINT    NOT NULL,
-    post_id     BIGINT    NOT NULL,
+    id         BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    account_id BIGINT NOT NULL,
+    post_id    BIGINT NOT NULL,
     CONSTRAINT likes_account_fkey FOREIGN KEY (account_id) REFERENCES account (id) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT likes_post_fkey FOREIGN KEY (post_id) REFERENCES post (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -92,7 +92,7 @@ CREATE TABLE message
 (
     id          BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     chat_id     BIGINT    NOT NULL,
-    message     TEXT     NOT NULL,
+    message     TEXT      NOT NULL,
     create_time TIMESTAMP NOT NULL DEFAULT NOW(),
     CONSTRAINT message_chat_fkey FOREIGN KEY (chat_id) REFERENCES chat (id) ON DELETE CASCADE ON UPDATE CASCADE
 );

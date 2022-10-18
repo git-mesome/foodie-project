@@ -95,17 +95,14 @@ public class PostService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
         final Boolean isLikes;
 
-        System.out.println(accountId);
-
         if (accountId == null) {
             isLikes = false;
         } else {
             final Account account = accountRepository.findById(accountId)
                     .orElseThrow(() -> new AccountNotFoundException("존재하지 않는 회원정보입니다."));
+
             Optional<Likes> likes = likesRepository.findLikesByAccountIdAndPostId(account.getId(), post.getId());
-            System.out.println(likes);
             isLikes = likes.isPresent();
-            System.out.println(isLikes);
         }
         updateHit(post.getId());
 
@@ -116,6 +113,7 @@ public class PostService {
                 post.getAuthor().getGrade(),
                 post.getTitle(),
                 post.getContent(),
+                post.getExpirationDate(),
                 post.getHit(),
                 isLikes,
                 post.getLikesCount(),
