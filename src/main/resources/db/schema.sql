@@ -40,7 +40,6 @@ CREATE TABLE post
     category_id     INTEGER,
     hit             INTEGER      NOT NULL DEFAULT 0,
     likes_count     INTEGER      NOT NULL DEFAULT 0,
-    expiration_date VARCHAR      NOT NULL,
     create_date     TIMESTAMP    NOT NULL DEFAULT NOW(),
     update_date     TIMESTAMP,
     taker_id        BIGINT,
