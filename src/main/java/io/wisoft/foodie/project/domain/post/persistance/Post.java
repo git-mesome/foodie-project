@@ -45,9 +45,6 @@ public class Post extends BaseTimeEntity {
     @Column(name = "likes_count", columnDefinition = "integer default 0", nullable = false)
     private Integer likesCount;
 
-    @Column(name = "expiration_date")
-    private String expirationDate;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "taker_id")
     private Account taker;
@@ -74,14 +71,12 @@ public class Post extends BaseTimeEntity {
                 final String title,
                 final String content,
                 final Category category,
-                final String expirationDate,
                 final PostType postType) {
 
         this.author = author;
         this.title = title;
         this.content = content;
         this.category = category;
-        this.expirationDate = expirationDate;
         this.postType = postType;
 
     }

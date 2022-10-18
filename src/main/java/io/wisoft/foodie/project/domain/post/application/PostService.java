@@ -61,7 +61,6 @@ public class PostService {
                 request.title(),
                 request.content(),
                 category,
-                request.expirationDate(),
                 request.getPostType()
         ));
 
@@ -104,7 +103,6 @@ public class PostService {
                 post.getAuthor().getGrade(),
                 post.getTitle(),
                 post.getContent(),
-                post.getExpirationDate(),
                 post.getHit(),
                 checkLikeStateByAccountIdAndPostId(accountId, post.getId()),
                 post.getLikesCount(),

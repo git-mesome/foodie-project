@@ -9,7 +9,6 @@ public record RegisterPostRequest(@NotBlank(message = "제목은 필수 항목�
                                   @Size(max = 500, message = "제목은 499자를 초과할 수 없습니다.") String title,
                                   @NotBlank(message = "내용을 작성해주세요.") String content,
                                   @NotBlank(message = "카테고리를 선택해주세요.") String category,
-                                  @NotBlank(message = "유효기간을 적어주세요.")String expirationDate,
                                   String postType) {
 
     public PostType getPostType() {
