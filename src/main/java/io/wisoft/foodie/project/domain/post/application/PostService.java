@@ -11,10 +11,7 @@ import io.wisoft.foodie.project.domain.post.persistance.likes.Likes;
 import io.wisoft.foodie.project.domain.post.persistance.likes.LikesRepository;
 import io.wisoft.foodie.project.domain.post.web.dto.req.RegisterPostRequest;
 import io.wisoft.foodie.project.domain.post.web.dto.req.UpdatePostRequest;
-import io.wisoft.foodie.project.domain.post.web.dto.res.FindAllPostsResponse;
-import io.wisoft.foodie.project.domain.post.web.dto.res.FindPostDetailResponse;
-import io.wisoft.foodie.project.domain.post.web.dto.res.LikesResponse;
-import io.wisoft.foodie.project.domain.post.web.dto.res.RegisterPostResponse;
+import io.wisoft.foodie.project.domain.post.web.dto.res.*;
 import io.wisoft.foodie.project.exception.AccountNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,9 +47,9 @@ public class PostService {
     @Transactional
     public RegisterPostResponse register(final RegisterPostRequest request,
                                          final List<String> imagePath,
-                                         final Long id) {
+                                         final Long authorId) {
 
-        final Account account = accountRepository.findById(id)
+        final Account account = accountRepository.findById(authorId)
                 .orElseThrow(() -> new AccountNotFoundException("존재하지 않는 회원정보입니다."));
         final Category category = categoryRepository.findByName(request.category());
 
@@ -74,18 +71,6 @@ public class PostService {
 
         return new RegisterPostResponse(
                 post.getId());
-    }
-
-    @Transactional
-    public Long update(final Long id, final UpdatePostRequest requestDto) {
-
-        final Post post = postRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다. id=" + id));
-
-        post.update(requestDto.title(), requestDto.content());
-
-        return id;
-
     }
 
     @Transactional
@@ -133,6 +118,27 @@ public class PostService {
                         post.getLikesCount(),
                         post.getUpdateDate()))
                 .toList();
+
+    }
+
+    @Transactional
+    public UpdatePostResponse update(final Long id, final UpdatePostRequest request, final Long authorId) {
+
+        accountRepository.findById(authorId)
+                .orElseThrow(() -> new AccountNotFoundException("존재하지 않는 회원정보입니다."));
+        final Post post = postRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다. id=" + id));
+        final Category category = categoryRepository.findByName(request.category());
+
+        post.update(
+                request.title(),
+                request.content(),
+                category
+        );
+
+        postRepository.save(post);
+
+        return new UpdatePostResponse(post.getId());
 
     }
 

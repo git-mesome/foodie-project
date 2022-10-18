@@ -3,10 +3,7 @@ package io.wisoft.foodie.project.domain.post.web;
 import io.wisoft.foodie.project.domain.post.persistance.PostType;
 import io.wisoft.foodie.project.domain.post.web.dto.req.UpdatePostRequest;
 import io.wisoft.foodie.project.domain.post.web.dto.req.RegisterPostRequest;
-import io.wisoft.foodie.project.domain.post.web.dto.res.FindAllPostsResponse;
-import io.wisoft.foodie.project.domain.post.web.dto.res.FindPostDetailResponse;
-import io.wisoft.foodie.project.domain.post.web.dto.res.LikesResponse;
-import io.wisoft.foodie.project.domain.post.web.dto.res.RegisterPostResponse;
+import io.wisoft.foodie.project.domain.post.web.dto.res.*;
 import io.wisoft.foodie.project.domain.post.application.PostService;
 import io.wisoft.foodie.project.domain.image.S3Util;
 import io.wisoft.foodie.project.global.resolver.AccountIdentifier;
@@ -61,20 +58,22 @@ public class PostController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Long> update(@PathVariable Long id, @RequestBody UpdatePostRequest request) {
+    public ResponseEntity<UpdatePostResponse> update(@PathVariable final Long id,
+                                                     @RequestBody final UpdatePostRequest request,
+                                                     @AccountIdentifier final Long authorId) {
         return ResponseEntity
-                .ok(postService.update(id, request));
+                .ok(postService.update(id, request, authorId));
     }
 
     @PostMapping("/{id}/likes")
-    public ResponseEntity<LikesResponse> likes(@PathVariable Long id,
+    public ResponseEntity<LikesResponse> likes(@PathVariable final Long id,
                                                @AccountIdentifier final Long accountId) {
         return ResponseEntity
                 .ok(postService.likes(id, accountId));
     }
 
     @DeleteMapping("/{id}/likes")
-    public ResponseEntity<LikesResponse> unlikes(@PathVariable Long id,
+    public ResponseEntity<LikesResponse> unlikes(@PathVariable final Long id,
                                                  @AccountIdentifier final Long accountId) {
         return ResponseEntity
                 .ok(postService.unlikes(id, accountId));

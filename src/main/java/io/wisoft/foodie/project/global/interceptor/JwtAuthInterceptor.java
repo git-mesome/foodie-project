@@ -32,7 +32,11 @@ public class JwtAuthInterceptor implements HandlerInterceptor {
 
         if (request.getRequestURI().startsWith("/posts") && request.getMethod().equals("GET")) {
             return true;
-        } else return accountId != null;    // TODO: 검증이 필요함 에러 던지기 나중에 꼭 할것!
+        } else if (accountId != null) {
+            // TODO: 검증이 필요함 에러 던지기 나중에 꼭 할것!
+            return true;
+        } else
+            throw new IllegalStateException("토큰이 비었습니다.");
 
     }
 
