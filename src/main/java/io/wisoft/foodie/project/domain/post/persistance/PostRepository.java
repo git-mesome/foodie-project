@@ -15,12 +15,6 @@ public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificat
 
     List<Post> findByPostTypeOrderByCreateDateDesc(PostType postType);
 
-    @Transactional
-    @Modifying
-    @Query("update Post p set p.hit = p.hit + 1 where p.id = :id")
-    Integer updateHit(Long id);
-
-    @Transactional
     @Modifying
     @Query("update Post p set p.likesCount = p.likesCount + :plusOrMinus where p.id =:id")
     Integer updateLikesCount(@Param("id") Long id, @Param("plusOrMinus") Integer plusOrMinus);

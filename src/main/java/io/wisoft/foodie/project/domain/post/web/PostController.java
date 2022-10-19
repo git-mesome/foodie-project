@@ -1,6 +1,8 @@
 package io.wisoft.foodie.project.domain.post.web;
 
+import io.wisoft.foodie.project.domain.account.web.dto.res.DeleteAccountResponse;
 import io.wisoft.foodie.project.domain.post.persistance.PostType;
+import io.wisoft.foodie.project.domain.post.web.dto.req.DeletePostImageRequest;
 import io.wisoft.foodie.project.domain.post.web.dto.req.UpdatePostRequest;
 import io.wisoft.foodie.project.domain.post.web.dto.req.RegisterPostRequest;
 import io.wisoft.foodie.project.domain.post.web.dto.res.*;
@@ -46,14 +48,14 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<RegisterPostResponse> register(@RequestPart(value = "imagePath", required = false) final Optional<List<MultipartFile>> multipartFiles,
-                                                         @RequestPart(value = "postContents") final RegisterPostRequest registerRequest,
+                                                         @RequestPart(value = "postContents") final RegisterPostRequest request,
                                                          @AccountIdentifier final Long authorId) throws IOException {
 
         List<String> imagePaths = s3Util.uploadFileList(multipartFiles.orElse(Collections.emptyList()), "post");
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(postService.register(registerRequest, imagePaths, authorId));
+                .body(postService.register(request, imagePaths, authorId));
 
     }
 
@@ -64,6 +66,20 @@ public class PostController {
         return ResponseEntity
                 .ok(postService.update(id, request, authorId));
     }
+
+    @PutMapping("/{id}/images")
+    public ResponseEntity<UpdatePostResponse> updateImages(@PathVariable final Long id,
+                                                           @RequestPart(value = "deleteImages") final DeletePostImageRequest request,
+                                                           @RequestPart(value = "imagePath", required = false) final Optional<List<MultipartFile>> multipartFiles,
+                                                           @AccountIdentifier final Long authorId) throws IOException {
+
+        s3Util.deleteFileList(request.imageNameList());
+        List<String> imagePaths = s3Util.uploadFileList(multipartFiles.orElse(Collections.emptyList()), "post");
+
+        return ResponseEntity
+                .ok(postService.updateImages(id, request, imagePaths, authorId));
+    }
+
 
     @PostMapping("/{id}/likes")
     public ResponseEntity<LikesResponse> likes(@PathVariable final Long id,

@@ -9,6 +9,7 @@ import io.wisoft.foodie.project.domain.post.persistance.category.Category;
 import io.wisoft.foodie.project.domain.post.persistance.category.CategoryRepository;
 import io.wisoft.foodie.project.domain.post.persistance.likes.Likes;
 import io.wisoft.foodie.project.domain.post.persistance.likes.LikesRepository;
+import io.wisoft.foodie.project.domain.post.web.dto.req.DeletePostImageRequest;
 import io.wisoft.foodie.project.domain.post.web.dto.req.RegisterPostRequest;
 import io.wisoft.foodie.project.domain.post.web.dto.req.UpdatePostRequest;
 import io.wisoft.foodie.project.domain.post.web.dto.res.*;
@@ -69,9 +70,37 @@ public class PostService {
             imageList.add(image);
         }
 
-        return new RegisterPostResponse(
-                post.getId());
+        return new RegisterPostResponse(post.getId());
     }
+
+    @Transactional
+    public UpdatePostResponse updateImages(final Long id,
+                                           final DeletePostImageRequest request,
+                                           final List<String> imagePathList,
+                                           final Long authorId) {
+        final Post post = postRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시물입니다."));
+
+        accountRepository.findById(authorId)
+                .orElseThrow(() -> new AccountNotFoundException("존재하지 않는 회원정보입니다."));
+
+        final List<PostImage> imageList = new ArrayList<>();
+
+        for (String image : request.imageNameList()) {
+
+            imageRepository.deleteByPostIdAndPostImagePathEndsWith(post.getId(), image);
+        }
+
+        for (String imagePath : imagePathList) {
+            PostImage image = new PostImage(post, imagePath);
+            imageList.add(image);
+        }
+            imageRepository.saveAll(imageList);
+
+        return new UpdatePostResponse(post.getId());
+
+    }
+
 
     @Transactional
     public FindPostDetailResponse findById(final Long id, final Long accountId) {
@@ -176,6 +205,7 @@ public class PostService {
         );
     }
 
+    @Transactional
     public LikesResponse unlikes(Long id, Long accountId) {
 
         final Account account = accountRepository.findById(accountId)

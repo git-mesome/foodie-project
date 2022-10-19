@@ -1,5 +1,6 @@
 package io.wisoft.foodie.project.domain.image;
 
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.*;
 import lombok.extern.slf4j.Slf4j;
@@ -80,10 +81,22 @@ public class S3Util {
         return dirName + "/" + UUID.randomUUID().toString().concat(getFileExtension(fileName));
     }
 
+    public void deleteFileList(List<String> fileNameList){
 
-    public void deleteFile(final String fileName) {
-        final DeleteObjectRequest request = new DeleteObjectRequest(bucket, fileName);
-        amazonS3Client.deleteObject(request);
+        for(String fileName : fileNameList){
+            deleteFile(fileName);
+        }
+
+    }
+
+    private void deleteFile(final String fileName) {
+        try {
+            final DeleteObjectRequest request = new DeleteObjectRequest(this.bucket, fileName);
+            amazonS3Client.deleteObject(request);
+        }catch (AmazonServiceException e){
+            System.out.println(e.getMessage());
+        }
+
     }
 
 
