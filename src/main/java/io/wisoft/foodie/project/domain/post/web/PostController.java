@@ -1,13 +1,13 @@
 package io.wisoft.foodie.project.domain.post.web;
 
 import io.wisoft.foodie.project.domain.image.application.S3Service;
+import io.wisoft.foodie.project.domain.post.persistance.DealStatus;
 import io.wisoft.foodie.project.domain.post.persistance.PostType;
 import io.wisoft.foodie.project.domain.post.web.dto.req.DeletePostImageRequest;
 import io.wisoft.foodie.project.domain.post.web.dto.req.UpdatePostRequest;
 import io.wisoft.foodie.project.domain.post.web.dto.req.RegisterPostRequest;
 import io.wisoft.foodie.project.domain.post.web.dto.res.*;
 import io.wisoft.foodie.project.domain.post.application.PostService;
-import io.wisoft.foodie.project.domain.image.S3Util;
 import io.wisoft.foodie.project.global.resolver.AccountIdentifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,7 +50,7 @@ public class PostController {
                                                          @RequestPart(value = "postContents") final RegisterPostRequest request,
                                                          @AccountIdentifier final Long authorId) throws IOException {
 
-        List<String> imagePaths = s3Service.uploadFileList(multipartFiles);
+        final List<String> imagePaths = s3Service.uploadFileList(multipartFiles);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -76,10 +73,31 @@ public class PostController {
                                                            @AccountIdentifier final Long authorId) throws IOException {
 
         s3Service.deleteFileList(request.imageNameList());
-        List<String> imagePaths = s3Service.uploadFileList(multipartFiles);
+        final List<String> imagePaths = s3Service.uploadFileList(multipartFiles);
 
         return ResponseEntity
                 .ok(postService.updateImages(id, request, imagePaths, authorId));
+    }
+
+    @PutMapping("{id}/yet")
+    public ResponseEntity<UpdatePostResponse> updateDealStatusYet(@PathVariable("id") final Long id,
+                                                                  @AccountIdentifier final Long authorId) {
+        return ResponseEntity
+                .ok(postService.updateDealStatus(id, DealStatus.YET, authorId));
+    }
+
+    @PutMapping("{id}/book")
+    public ResponseEntity<UpdatePostResponse> updateDealStatusBook(@PathVariable("id") final Long id,
+                                                                   @AccountIdentifier final Long authorId) {
+        return ResponseEntity
+                .ok(postService.updateDealStatus(id, DealStatus.BOOK, authorId));
+    }
+
+    @PutMapping("{id}/finish")
+    public ResponseEntity<UpdatePostResponse> updateDealStatusFinish(@PathVariable("id") final Long id,
+                                                                     @AccountIdentifier final Long authorId) {
+        return ResponseEntity
+                .ok(postService.updateDealStatus(id, DealStatus.FINISH, authorId));
     }
 
     @PostMapping("/{id}/likes")

@@ -91,6 +91,10 @@ public class Post extends BaseTimeEntity {
 
     }
 
+    public void updateDealStatus(final DealStatus dealStatus) {
+        this.dealStatus = dealStatus;
+    }
+
     public void increaseHit() {
         this.hit++;
     }
