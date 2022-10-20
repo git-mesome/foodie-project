@@ -83,18 +83,17 @@ public class Account extends BaseTimeEntity {
 
     }
 
-    public Account update(final String nickName,
-                          final String phoneNumber,
-                          final String siDo,
-                          final String siGunGu,
-                          final String eupMyeonDong) {
+    public void update(final String nickName,
+                       final String phoneNumber,
+                       final String siDo,
+                       final String siGunGu,
+                       final String eupMyeonDong) {
         this.nickname = nickName;
         this.phoneNumber = phoneNumber;
         this.siDo = siDo;
         this.siGunGu = siGunGu;
         this.eupMyeonDong = eupMyeonDong;
 
-        return this;
     }
 
 
