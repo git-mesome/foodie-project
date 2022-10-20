@@ -81,35 +81,6 @@ public class S3Util {
         return dirName + "/" + UUID.randomUUID().toString().concat(getFileExtension(fileName));
     }
 
-    public void deleteFileList(List<String> fileNameList){
-
-        for(String fileName : fileNameList){
-            deleteFile(fileName);
-        }
-
-    }
-
-    private void deleteFile(final String fileName) {
-        try {
-            final DeleteObjectRequest request = new DeleteObjectRequest(this.bucket, fileName);
-            amazonS3Client.deleteObject(request);
-        }catch (AmazonServiceException e){
-            System.out.println(e.getMessage());
-        }
-
-    }
-
-
-//    private void removeNewFile(File targetFile) {
-//
-//        if (targetFile.delete()) {
-//            log.info("File delete success");
-//            return;
-//        }
-//        log.info("File delete fail");
-//
-//    }
-
     private String getFileExtension(final String fileName) {
 
         final ArrayList<String> fileValidate = new ArrayList<>();
@@ -129,5 +100,24 @@ public class S3Util {
 
         return fileName.substring(fileName.lastIndexOf("."));
     }
+
+    public void deleteFileList(List<String> fileNameList){
+
+        for(String fileName : fileNameList){
+            deleteFile(fileName);
+        }
+
+    }
+
+    private void deleteFile(final String fileName) {
+        try {
+            final DeleteObjectRequest request = new DeleteObjectRequest(this.bucket, fileName);
+            amazonS3Client.deleteObject(request);
+        }catch (AmazonServiceException e){
+            System.out.println(e.getMessage());
+        }
+
+    }
+
 
 }

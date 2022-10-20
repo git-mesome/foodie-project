@@ -9,10 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ImageRepository extends JpaRepository<PostImage, Long> {
 
-    @Modifying
-    @Query("delete from PostImage p where p.post.id = :postId and p.postImagePath like '%:imageName'")
-    PostImage deletePostImageName(@Param("postId") Long postId, @Param("imageName") String imageName);
-
-    void deleteByPostIdAndPostImagePathEndsWith(Long postId, String imageNAme);
+    void deleteByPostIdAndPostImagePathEndsWith(Long postId, String imageName);
 
 }

@@ -95,7 +95,7 @@ public class PostService {
             PostImage image = new PostImage(post, imagePath);
             imageList.add(image);
         }
-            imageRepository.saveAll(imageList);
+        imageRepository.saveAll(imageList);
 
         return new UpdatePostResponse(post.getId());
 
@@ -184,7 +184,7 @@ public class PostService {
     }
 
     @Transactional
-    public LikesResponse likes(Long id, Long accountId) {
+    public LikesResponse likes(final Long id, final Long accountId) {
 
         final Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new AccountNotFoundException("존재하지 않는 회원정보입니다."));
@@ -206,7 +206,7 @@ public class PostService {
     }
 
     @Transactional
-    public LikesResponse unlikes(Long id, Long accountId) {
+    public LikesResponse unlikes(final Long id, final Long accountId) {
 
         final Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new AccountNotFoundException("존재하지 않는 회원정보입니다."));
@@ -221,4 +221,19 @@ public class PostService {
 
         return new LikesResponse(likes.getId(), post.getLikesCount() - 1);
     }
+
+    @Transactional
+    public DeletePostResponse delete(final Long id,final Long accountId) {
+
+        final Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new AccountNotFoundException("존재하지 않는 회원정보입니다."));
+        final Post post = postRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
+
+        postRepository.deleteById(post.getId());
+
+        return new DeletePostResponse(post.getId());
+
+    }
+
 }

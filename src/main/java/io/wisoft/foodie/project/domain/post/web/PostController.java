@@ -1,6 +1,5 @@
 package io.wisoft.foodie.project.domain.post.web;
 
-import io.wisoft.foodie.project.domain.account.web.dto.res.DeleteAccountResponse;
 import io.wisoft.foodie.project.domain.post.persistance.PostType;
 import io.wisoft.foodie.project.domain.post.web.dto.req.DeletePostImageRequest;
 import io.wisoft.foodie.project.domain.post.web.dto.req.UpdatePostRequest;
@@ -15,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -60,7 +61,7 @@ public class PostController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UpdatePostResponse> update(@PathVariable final Long id,
+    public ResponseEntity<UpdatePostResponse> update(@PathVariable("id") final Long id,
                                                      @RequestBody final UpdatePostRequest request,
                                                      @AccountIdentifier final Long authorId) {
         return ResponseEntity
@@ -68,31 +69,58 @@ public class PostController {
     }
 
     @PutMapping("/{id}/images")
-    public ResponseEntity<UpdatePostResponse> updateImages(@PathVariable final Long id,
+    public ResponseEntity<UpdatePostResponse> updateImages(@PathVariable("id") final Long id,
                                                            @RequestPart(value = "deleteImages") final DeletePostImageRequest request,
                                                            @RequestPart(value = "imagePath", required = false) final Optional<List<MultipartFile>> multipartFiles,
                                                            @AccountIdentifier final Long authorId) throws IOException {
 
-        s3Util.deleteFileList(request.imageNameList());
+        s3Util.deleteFileList(Collections.singletonList("post/" + request.imageNameList()));
         List<String> imagePaths = s3Util.uploadFileList(multipartFiles.orElse(Collections.emptyList()), "post");
 
         return ResponseEntity
                 .ok(postService.updateImages(id, request, imagePaths, authorId));
     }
 
-
     @PostMapping("/{id}/likes")
-    public ResponseEntity<LikesResponse> likes(@PathVariable final Long id,
+    public ResponseEntity<LikesResponse> likes(@PathVariable("id") final Long id,
                                                @AccountIdentifier final Long accountId) {
         return ResponseEntity
                 .ok(postService.likes(id, accountId));
     }
 
     @DeleteMapping("/{id}/likes")
-    public ResponseEntity<LikesResponse> unlikes(@PathVariable final Long id,
+    public ResponseEntity<LikesResponse> unlikes(@PathVariable("id") final Long id,
                                                  @AccountIdentifier final Long accountId) {
         return ResponseEntity
                 .ok(postService.unlikes(id, accountId));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<DeletePostResponse> delete(@PathVariable("id") final Long id,
+                                                     @RequestBody final DeletePostImageRequest request,
+                                                     @AccountIdentifier final Long accountId) {
+
+        s3Util.deleteFileList(request.imageNameList().stream()
+                .map((item) -> {
+                    try {
+                        return new URL(item).getFile().substring(1);
+                    } catch (MalformedURLException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).toList());
+
+        System.out.println(request.imageNameList().stream()
+                .map((item) -> {
+                    try {
+                        return new URL(item).getFile().substring(1);
+                    } catch (MalformedURLException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).toList());
+
+        return ResponseEntity.ok(
+                postService.delete(id, accountId)
+        );
     }
 
 }
