@@ -1,5 +1,6 @@
 package io.wisoft.foodie.project.domain.post.web;
 
+import io.wisoft.foodie.project.domain.image.application.S3Service;
 import io.wisoft.foodie.project.domain.post.persistance.PostType;
 import io.wisoft.foodie.project.domain.post.web.dto.req.DeletePostImageRequest;
 import io.wisoft.foodie.project.domain.post.web.dto.req.UpdatePostRequest;
@@ -25,12 +26,12 @@ import java.util.Optional;
 public class PostController {
 
     private final PostService postService;
-    private final S3Util s3Util;
+    private final S3Service s3Service;
 
     public PostController(final PostService postService,
-                          final S3Util s3Util) {
+                          final S3Service s3Service) {
         this.postService = postService;
-        this.s3Util = s3Util;
+        this.s3Service = s3Service;
     }
 
     @GetMapping
@@ -52,7 +53,7 @@ public class PostController {
                                                          @RequestPart(value = "postContents") final RegisterPostRequest request,
                                                          @AccountIdentifier final Long authorId) throws IOException {
 
-        List<String> imagePaths = s3Util.uploadFileList(multipartFiles.orElse(Collections.emptyList()), "post");
+        List<String> imagePaths = s3Service.uploadFileList(multipartFiles);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -74,8 +75,8 @@ public class PostController {
                                                            @RequestPart(value = "imagePath", required = false) final Optional<List<MultipartFile>> multipartFiles,
                                                            @AccountIdentifier final Long authorId) throws IOException {
 
-        s3Util.deleteFileList(Collections.singletonList("post/" + request.imageNameList()));
-        List<String> imagePaths = s3Util.uploadFileList(multipartFiles.orElse(Collections.emptyList()), "post");
+        s3Service.deleteFileList(request.imageNameList());
+        List<String> imagePaths = s3Service.uploadFileList(multipartFiles);
 
         return ResponseEntity
                 .ok(postService.updateImages(id, request, imagePaths, authorId));
@@ -100,23 +101,7 @@ public class PostController {
                                                      @RequestBody final DeletePostImageRequest request,
                                                      @AccountIdentifier final Long accountId) {
 
-        s3Util.deleteFileList(request.imageNameList().stream()
-                .map((item) -> {
-                    try {
-                        return new URL(item).getFile().substring(1);
-                    } catch (MalformedURLException e) {
-                        throw new RuntimeException(e);
-                    }
-                }).toList());
-
-        System.out.println(request.imageNameList().stream()
-                .map((item) -> {
-                    try {
-                        return new URL(item).getFile().substring(1);
-                    } catch (MalformedURLException e) {
-                        throw new RuntimeException(e);
-                    }
-                }).toList());
+        s3Service.deleteFileList(request.imageNameList());
 
         return ResponseEntity.ok(
                 postService.delete(id, accountId)
