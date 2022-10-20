@@ -74,35 +74,6 @@ public class PostService {
     }
 
     @Transactional
-    public UpdatePostResponse updateImages(final Long id,
-                                           final DeletePostImageRequest request,
-                                           final List<String> imagePathList,
-                                           final Long authorId) {
-        final Post post = postRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시물입니다."));
-
-        accountRepository.findById(authorId)
-                .orElseThrow(() -> new AccountNotFoundException("존재하지 않는 회원정보입니다."));
-
-        final List<PostImage> imageList = new ArrayList<>();
-
-        for (String image : request.imageNameList()) {
-
-            imageRepository.deleteByPostIdAndPostImagePathEndsWith(post.getId(), image);
-        }
-
-        for (String imagePath : imagePathList) {
-            PostImage image = new PostImage(post, imagePath);
-            imageList.add(image);
-        }
-        imageRepository.saveAll(imageList);
-
-        return new UpdatePostResponse(post.getId());
-
-    }
-
-
-    @Transactional
     public FindPostDetailResponse findById(final Long id, final Long accountId) {
 
         final Post post = postRepository.findById(id)
@@ -153,19 +124,62 @@ public class PostService {
     @Transactional
     public UpdatePostResponse update(final Long id, final UpdatePostRequest request, final Long authorId) {
 
-        accountRepository.findById(authorId)
-                .orElseThrow(() -> new AccountNotFoundException("존재하지 않는 회원정보입니다."));
         final Post post = postRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다. id=" + id));
+
+        authorVerification(post, authorId);
+
         final Category category = categoryRepository.findByName(request.category());
 
         post.update(
                 request.title(),
                 request.content(),
-                category
-        );
+                category);
 
         postRepository.save(post);
+
+        return new UpdatePostResponse(post.getId());
+
+    }
+
+
+    @Transactional
+    public UpdatePostResponse updateImages(final Long id,
+                                           final DeletePostImageRequest request,
+                                           final List<String> imagePathList,
+                                           final Long authorId) {
+        final Post post = postRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시물입니다."));
+
+        authorVerification(post, authorId);
+
+        final List<PostImage> imageList = new ArrayList<>();
+
+        for (String image : request.imageNameList()) {
+
+            imageRepository.deleteByPostIdAndPostImagePathEndsWith(post.getId(), image);
+        }
+
+        for (String imagePath : imagePathList) {
+            PostImage image = new PostImage(post, imagePath);
+            imageList.add(image);
+        }
+        imageRepository.saveAll(imageList);
+
+        return new UpdatePostResponse(post.getId());
+
+    }
+
+    @Transactional
+    public UpdatePostResponse updateDealStatus(final Long id,
+                                               final DealStatus dealStatus,
+                                               final Long authorId) {
+        final Post post = postRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시물입니다."));
+
+        authorVerification(post, authorId);
+
+        post.updateDealStatus(dealStatus);
 
         return new UpdatePostResponse(post.getId());
 
@@ -223,17 +237,25 @@ public class PostService {
     }
 
     @Transactional
-    public DeletePostResponse delete(final Long id,final Long accountId) {
+    public DeletePostResponse delete(final Long id, final Long authorId) {
 
-        final Account account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new AccountNotFoundException("존재하지 않는 회원정보입니다."));
         final Post post = postRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
+
+        authorVerification(post, authorId);
 
         postRepository.deleteById(post.getId());
 
         return new DeletePostResponse(post.getId());
 
     }
+
+    public void authorVerification(final Post post, final Long authorId) {
+
+        if (!post.getAuthor().getId().equals(authorId))
+            throw new IllegalStateException("게시글을 수정할 권한이 없습니다.");
+
+    }
+
 
 }
