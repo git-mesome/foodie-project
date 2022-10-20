@@ -3,6 +3,7 @@ package io.wisoft.foodie.project.domain.account.application;
 import io.wisoft.foodie.project.domain.account.persistance.Account;
 import io.wisoft.foodie.project.domain.account.persistance.AccountRepository;
 import io.wisoft.foodie.project.domain.account.web.dto.req.UpdateAccountRequest;
+import io.wisoft.foodie.project.domain.account.web.dto.res.DeleteAccountResponse;
 import io.wisoft.foodie.project.domain.account.web.dto.res.FindAccountInfoResponse;
 import io.wisoft.foodie.project.domain.account.web.dto.res.UpdateAccountResponse;
 import io.wisoft.foodie.project.exception.AccountNotFoundException;
@@ -61,13 +62,13 @@ public class AccountService {
     }
 
     @Transactional
-    public UpdateAccountResponse delete(final Long id) {
+    public DeleteAccountResponse delete(final Long id) {
         final Account account = accountRepository.findById(id)
                 .orElseThrow(() -> new AccountNotFoundException("없는 사용자 입니다."));
 
         accountRepository.deleteById(account.getId());
 
-        return new UpdateAccountResponse(account.getId());
+        return new DeleteAccountResponse(account.getId());
     }
 
 }

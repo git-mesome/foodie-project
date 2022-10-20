@@ -3,6 +3,7 @@ package io.wisoft.foodie.project.domain.account.web;
 
 import io.wisoft.foodie.project.domain.account.web.dto.req.UpdateAccountRequest;
 import io.wisoft.foodie.project.domain.account.application.AccountService;
+import io.wisoft.foodie.project.domain.account.web.dto.res.DeleteAccountResponse;
 import io.wisoft.foodie.project.domain.account.web.dto.res.FindAccountInfoResponse;
 import io.wisoft.foodie.project.domain.account.web.dto.res.UpdateAccountResponse;
 import io.wisoft.foodie.project.global.resolver.AccountIdentifier;
@@ -41,7 +42,7 @@ public class AccountController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<UpdateAccountResponse> delete(@PathVariable("id") @Valid final Long accountId) {
+    public ResponseEntity<DeleteAccountResponse> delete(@PathVariable("id") @Valid final Long accountId) {
         return ResponseEntity.ok(
                 accountService.delete(accountId)
         );
