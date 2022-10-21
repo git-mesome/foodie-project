@@ -10,6 +10,8 @@ import io.wisoft.foodie.project.domain.post.web.dto.res.*;
 import io.wisoft.foodie.project.domain.post.application.PostService;
 import io.wisoft.foodie.project.domain.post.web.dto.res.find.*;
 import io.wisoft.foodie.project.global.resolver.AccountIdentifier;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,10 +35,17 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<FindAllPostsResponse>> findAll(@RequestParam(value = "postType") final String postType,
+    public ResponseEntity<List<FindAllPostsResponse>> findAll(final @PageableDefault(size = 2) Pageable pageable,
+                                                              @RequestParam(value = "postType") final String postType,
+                                                              @RequestParam(value = "orderBy") final Optional<String> orderByOptions,
+                                                              @RequestParam(value = "hit") final Optional<String> popular,
                                                               @AccountIdentifier final Long accountId) {
         return ResponseEntity
-                .ok(postService.findAll(PostType.valueOf(postType.toUpperCase()), accountId));
+                .ok(postService.findAll(pageable,
+                        PostType.valueOf(postType.toUpperCase()),
+                        orderByOptions,
+                        popular,
+                        accountId));
     }
 
     @GetMapping("/{id}")

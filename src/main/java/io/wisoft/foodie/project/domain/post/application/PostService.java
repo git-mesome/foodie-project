@@ -16,6 +16,7 @@ import io.wisoft.foodie.project.domain.post.web.dto.res.*;
 import io.wisoft.foodie.project.domain.post.web.dto.res.find.*;
 import io.wisoft.foodie.project.exception.AccountNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -106,15 +107,24 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<FindAllPostsResponse> findAll(final PostType postType, final Long accountId) {
-
-        List<Post> postList = this.postRepository.findByPostTypeOrderByCreateDateDesc(postType);
+    public List<FindAllPostsResponse> findAll(final Pageable pageable,
+                                              final PostType postType,
+                                              final Optional<String> orderByOptions,
+                                              final Optional<String> popular,
+                                              final Long accountId) {
+        List<Post> postList =
+                popular.isPresent()
+                        ? this.postRepository.findTop4ByPostTypeOrderByHitDesc(postType)
+//                        : orderByOptions.isPresent()
+//                        ? this.postRepository.findAllByOrderByCreateDateAndDistanceAsc()
+                        : this.postRepository.findByPostTypeOrderByCreateDateDesc(postType, pageable);
 
         return postList.stream()
                 .map(post -> new FindAllPostsResponse(
                         post.getId(),
                         post.getAuthor().getNickname(),
                         post.getTitle(),
+                        post.getHit(),
                         checkLikeStateByAccountIdAndPostId(accountId, post.getId()),
                         post.getLikesCount(),
                         post.getUpdateDate()))
