@@ -13,6 +13,7 @@ import io.wisoft.foodie.project.domain.post.web.dto.req.DeletePostImageRequest;
 import io.wisoft.foodie.project.domain.post.web.dto.req.RegisterPostRequest;
 import io.wisoft.foodie.project.domain.post.web.dto.req.UpdatePostRequest;
 import io.wisoft.foodie.project.domain.post.web.dto.res.*;
+import io.wisoft.foodie.project.domain.post.web.dto.res.find.*;
 import io.wisoft.foodie.project.exception.AccountNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -122,6 +123,54 @@ public class PostService {
     }
 
     @Transactional
+    public List<FindAllSharedPostsResponse> findAllShared(final Long authorId) {
+
+        List<Post> postList = this.postRepository.findAllSharedPostByAuthorId(authorId, PostType.RECIPE);
+
+        return postList.stream()
+                .map(post -> new FindAllSharedPostsResponse(
+                        post.getId(),
+                        post.getTitle(),
+                        Optional
+                                .ofNullable(post.getTaker())
+                                .map(Account::getNickname)
+                                .orElse(null),
+                        post.getDealStatus()
+                )).toList();
+
+    }
+
+    @Transactional
+    public List<FindAllReceivedPostsResponse> findAllReceived(final Long accountId) {
+
+        List<Post> postList = this.postRepository.findAllReceivedPostByTakerId(accountId, PostType.RECIPE, DealStatus.FINISH);
+
+        return postList.stream()
+                .map(post -> new FindAllReceivedPostsResponse(
+                        post.getId(),
+                        post.getTitle(),
+                        post.getAuthor().getNickname(),
+                        post.getDealStatus()
+                )).toList();
+
+    }
+
+    @Transactional
+    public List<FindAllLikesResponse> findAllLikes(final Long accountId) {
+
+        List<Post> postList = this.postRepository.findAllPostByLikesAccountId(accountId);
+
+        return postList.stream()
+                .map(post -> new FindAllLikesResponse(
+                        post.getId(),
+                        post.getTitle(),
+                        post.getAuthor().getNickname(),
+                        post.getLikesCount()
+                )).toList();
+
+    }
+
+    @Transactional
     public UpdatePostResponse update(final Long id, final UpdatePostRequest request, final Long authorId) {
 
         final Post post = postRepository.findById(id)
@@ -191,7 +240,7 @@ public class PostService {
         if (accountId == null) {
             likesState = false;
         } else {
-            Optional<Likes> likes = likesRepository.findLikesByAccountIdAndPostId(accountId, postId);
+            Optional<Likes> likes = this.likesRepository.findLikesByAccountIdAndPostId(accountId, postId);
             likesState = likes.isPresent();
         }
         return likesState;
@@ -256,6 +305,5 @@ public class PostService {
             throw new IllegalStateException("게시글을 수정할 권한이 없습니다.");
 
     }
-
 
 }

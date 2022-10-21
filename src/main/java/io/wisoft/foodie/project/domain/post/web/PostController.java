@@ -8,6 +8,7 @@ import io.wisoft.foodie.project.domain.post.web.dto.req.UpdatePostRequest;
 import io.wisoft.foodie.project.domain.post.web.dto.req.RegisterPostRequest;
 import io.wisoft.foodie.project.domain.post.web.dto.res.*;
 import io.wisoft.foodie.project.domain.post.application.PostService;
+import io.wisoft.foodie.project.domain.post.web.dto.res.find.*;
 import io.wisoft.foodie.project.global.resolver.AccountIdentifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,6 +44,23 @@ public class PostController {
                                                            @AccountIdentifier final Long accountId) {
         return ResponseEntity
                 .ok(postService.findById(id, accountId));
+    }
+
+    @GetMapping("/shared")
+    public ResponseEntity<List<FindAllSharedPostsResponse>> findAllShared(@AccountIdentifier final Long authorId) {
+        return ResponseEntity
+                .ok(postService.findAllShared(authorId));
+    }
+
+    @GetMapping("/received")
+    public ResponseEntity<List<FindAllReceivedPostsResponse>> findAllReceived(@AccountIdentifier final Long accountId) {
+        return ResponseEntity
+                .ok(postService.findAllReceived(accountId));
+    }
+
+    @GetMapping("/likes")
+    public ResponseEntity<List<FindAllLikesResponse>> findAllLikes(@AccountIdentifier final Long accountId) {
+        return ResponseEntity.ok(postService.findAllLikes(accountId));
     }
 
     @PostMapping
@@ -121,9 +139,9 @@ public class PostController {
 
         s3Service.deleteFileList(request.imageNameList());
 
-        return ResponseEntity.ok(
-                postService.delete(id, accountId)
-        );
+        return ResponseEntity
+                .ok(postService.delete(id, accountId)
+                );
     }
 
 }
