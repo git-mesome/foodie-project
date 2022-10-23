@@ -35,7 +35,7 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<FindAllPostsResponse>> findAll(final @PageableDefault(size = 2) Pageable pageable,
+    public ResponseEntity<List<FindAllPostsResponse>> findAll(@PageableDefault(size = 30) final Pageable pageable,
                                                               @RequestParam(value = "postType") final String postType,
                                                               @RequestParam(value = "orderBy") final Optional<String> orderByOptions,
                                                               @RequestParam(value = "hit") final Optional<String> popular,
@@ -61,15 +61,26 @@ public class PostController {
                 .ok(postService.findAllShared(authorId));
     }
 
-    @GetMapping("/received")
-    public ResponseEntity<List<FindAllReceivedPostsResponse>> findAllReceived(@AccountIdentifier final Long accountId) {
-        return ResponseEntity
-                .ok(postService.findAllReceived(accountId));
-    }
+//    @GetMapping("/received")
+//    public ResponseEntity<List<FindAllReceivedPostsResponse>> findAllReceived(@AccountIdentifier final Long accountId) {
+//        return ResponseEntity
+//                .ok(postService.findAllReceived(accountId));
+//    }
 
     @GetMapping("/likes")
     public ResponseEntity<List<FindAllLikesResponse>> findAllLikes(@AccountIdentifier final Long accountId) {
-        return ResponseEntity.ok(postService.findAllLikes(accountId));
+        return ResponseEntity
+                .ok(postService.findAllLikes(accountId));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<SearchPostResponse>> searchByTitle(@PageableDefault(size = 30) final Pageable pageable,
+                                                                  @RequestParam(value = "keyword") final String keyword,
+                                                                  @RequestParam(value = "postType") final Optional<String> postType,
+                                                                  @AccountIdentifier final Long accountId) {
+
+        return ResponseEntity
+                .ok(postService.searchByTitle(pageable, keyword, postType.map(PostType::valueOf), accountId));
     }
 
     @PostMapping

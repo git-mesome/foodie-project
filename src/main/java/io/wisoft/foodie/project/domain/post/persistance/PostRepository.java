@@ -33,6 +33,8 @@ public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificat
     @Query("SELECT p FROM Account a, Post p, Likes l WHERE l.post.id = p.id AND l.account.id = a.id AND l.account.id = :accountId")
     List<Post> findAllPostByLikesAccountId(final Long accountId);
 
+    List<Post> searchByTitleContainingOrderByCreateDateDesc(final String keyword, final Pageable pageable);
+
     @Modifying
     @Query("update Post p set p.likesCount = p.likesCount + :plusOrMinus where p.id =:id")
     Integer updateLikesCount(@Param("id") final Long id, @Param("plusOrMinus") final Integer plusOrMinus);

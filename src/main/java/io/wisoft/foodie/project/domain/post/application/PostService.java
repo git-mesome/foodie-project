@@ -150,20 +150,20 @@ public class PostService {
 
     }
 
-    @Transactional
-    public List<FindAllReceivedPostsResponse> findAllReceived(final Long accountId) {
-
-        List<Post> postList = this.postRepository.findAllReceivedPostByTakerId(accountId, PostType.RECIPE, DealStatus.FINISH);
-
-        return postList.stream()
-                .map(post -> new FindAllReceivedPostsResponse(
-                        post.getId(),
-                        post.getTitle(),
-                        post.getAuthor().getNickname(),
-                        post.getDealStatus()
-                )).toList();
-
-    }
+//    @Transactional
+//    public List<FindAllReceivedPostsResponse> findAllReceived(final Long accountId) {
+//
+//        List<Post> postList = this.postRepository.findAllReceivedPostByTakerId(accountId, PostType.RECIPE, DealStatus.FINISH);
+//
+//        return postList.stream()
+//                .map(post -> new FindAllReceivedPostsResponse(
+//                        post.getId(),
+//                        post.getTitle(),
+//                        post.getAuthor().getNickname(),
+//                        post.getDealStatus()
+//                )).toList();
+//
+//    }
 
     @Transactional
     public List<FindAllLikesResponse> findAllLikes(final Long accountId) {
@@ -176,6 +176,30 @@ public class PostService {
                         post.getTitle(),
                         post.getAuthor().getNickname(),
                         post.getLikesCount()
+                )).toList();
+
+    }
+
+    @Transactional
+    public List<SearchPostResponse> searchByTitle(final Pageable pageable,
+                                                  final String keyword,
+                                                  final Optional<PostType> postType,
+                                                  final Long accountId) {
+
+        List<Post> postList =
+                postType.isPresent()
+                        ? this.postRepository.findByPostTypeOrderByCreateDateDesc(postType.get(), pageable)
+                        : this.postRepository.searchByTitleContainingOrderByCreateDateDesc(keyword, pageable);
+
+        return postList.stream()
+                .map(post -> new SearchPostResponse(
+                        post.getId(),
+                        post.getAuthor().getNickname(),
+                        post.getTitle(),
+                        post.getHit(),
+                        checkLikeStateByAccountIdAndPostId(accountId, post.getId()),
+                        post.getLikesCount(),
+                        post.getUpdateDate()
                 )).toList();
 
     }
