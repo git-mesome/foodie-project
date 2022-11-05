@@ -3,6 +3,7 @@ package io.wisoft.foodie.project.domain.post.persistance;
 import io.wisoft.foodie.project.domain.BaseTimeEntity;
 import io.wisoft.foodie.project.domain.account.persistance.Account;
 
+import io.wisoft.foodie.project.domain.chat.persistance.ChatRoom;
 import io.wisoft.foodie.project.domain.image.persistance.PostImage;
 import io.wisoft.foodie.project.domain.post.persistance.category.Category;
 import io.wisoft.foodie.project.domain.post.persistance.likes.Likes;
@@ -67,12 +68,14 @@ public class Post extends BaseTimeEntity {
     @OneToMany(mappedBy = "post")
     private final List<Likes> likes = new ArrayList<>();
 
+    @OneToMany(mappedBy = "post")
+    private final List<ChatRoom> chatRoomList = new ArrayList<>();
+
     public Post(final Account author,
                 final String title,
                 final String content,
                 final Category category,
                 final PostType postType) {
-
         this.author = author;
         this.title = title;
         this.content = content;

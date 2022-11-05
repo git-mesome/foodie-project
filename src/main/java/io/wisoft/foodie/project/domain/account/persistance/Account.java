@@ -1,6 +1,7 @@
 package io.wisoft.foodie.project.domain.account.persistance;
 
 import io.wisoft.foodie.project.domain.BaseTimeEntity;
+import io.wisoft.foodie.project.domain.chat.persistance.ChatRoom;
 import io.wisoft.foodie.project.domain.post.persistance.Grade;
 import io.wisoft.foodie.project.domain.post.persistance.Post;
 import io.wisoft.foodie.project.domain.post.persistance.likes.Likes;
@@ -60,9 +61,8 @@ public class Account extends BaseTimeEntity {
                    final String email,
                    final String profileImagePath,
                    final String nickname,
-                   final String phoneNumber,
-                   final Grade grade) {
-        this(null, oauthId, email, profileImagePath, nickname, phoneNumber, grade);
+                   final String phoneNumber) {
+        this(null, oauthId, email, profileImagePath, nickname, phoneNumber, null);
     }
 
     public Account(final Long id,

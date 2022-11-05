@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev
+    active: prod
     group:
       dev:
         - dev-db
@@ -10,3 +10,5 @@ spring:
       prod:
         - prod-db
         - prod-jpa
+        - s3
+        - oauth2

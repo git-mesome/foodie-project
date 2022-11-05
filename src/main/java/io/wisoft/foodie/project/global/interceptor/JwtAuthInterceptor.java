@@ -7,6 +7,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Objects;
 
 @Component
 public class JwtAuthInterceptor implements HandlerInterceptor {
@@ -27,9 +28,11 @@ public class JwtAuthInterceptor implements HandlerInterceptor {
                              final HttpServletResponse response,
                              final Object handler) {
 
+//        if(Objects.equals(request.getMethod(), "OPTIONS")){
+//            response.setStatus(HttpServletResponse.SC_OK);
+//        }
         final Long accountId = generateAccountIdFromRequest(request);
         request.setAttribute("id", accountId);
-
         if (request.getRequestURI().startsWith("/posts") && request.getMethod().equals("GET")) {
             return true;
         } else if (accountId != null) {

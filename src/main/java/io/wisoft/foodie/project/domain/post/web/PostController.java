@@ -10,6 +10,7 @@ import io.wisoft.foodie.project.domain.post.web.dto.res.*;
 import io.wisoft.foodie.project.domain.post.application.PostService;
 import io.wisoft.foodie.project.domain.post.web.dto.res.find.*;
 import io.wisoft.foodie.project.global.resolver.AccountIdentifier;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -21,13 +22,14 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-@RequestMapping("/posts")
+@RequestMapping("/api/posts")
 @RestController
 public class PostController {
 
     private final PostService postService;
     private final S3Service s3Service;
 
+    @Autowired
     public PostController(final PostService postService,
                           final S3Service s3Service) {
         this.postService = postService;
@@ -160,8 +162,7 @@ public class PostController {
         s3Service.deleteFileList(request.imageNameList());
 
         return ResponseEntity
-                .ok(postService.delete(id, accountId)
-                );
+                .ok(postService.delete(id, accountId));
     }
 
 }

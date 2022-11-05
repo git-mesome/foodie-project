@@ -28,8 +28,7 @@ public class AuthService {
                 request.email(),
                 request.profileImagePath(),
                 request.nickname(),
-                request.phoneNumber(),
-                request.getGrade()
+                request.phoneNumber()
         ));
 
         return new SignUpResponse(

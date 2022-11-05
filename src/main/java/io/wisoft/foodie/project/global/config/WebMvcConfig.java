@@ -29,11 +29,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
 
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000")
-                .allowedMethods("GET", "PUT", "PATCH", "DELETE", "OPTIONS")
-                .allowedHeaders("*")
-                .allowCredentials(true)
-                .maxAge(MAX_AGE_SECS);
+            .allowedOrigins("http://foodie.wisoft.io:3000")
+            .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+            .allowedHeaders("*")
+            .exposedHeaders("Authorization")
+            .allowCredentials(true)
+            .maxAge(MAX_AGE_SECS);
 
     }
 
@@ -41,21 +42,22 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         //HandlerInterceptor 객체를 설정, 로그인 상태인지 확인되면 기능과 연결된 url 등록
         registry.addInterceptor(jwtAuthInterceptor)
-                .addPathPatterns("/posts/**")
-                .addPathPatterns("/accounts/**")
-                .excludePathPatterns("/auth/**");
+            .addPathPatterns("/posts/**")
+            .addPathPatterns("/accounts/**")
+            .excludePathPatterns("/auth/**");
 
     }
 
     @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers){
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         argumentResolvers.add((handlerMethodArgumentResolver()));
     }
 
     @Bean
-    public AccountIdentifierHandlerMethodArgumentResolver handlerMethodArgumentResolver(){
+    public AccountIdentifierHandlerMethodArgumentResolver handlerMethodArgumentResolver() {
         return new AccountIdentifierHandlerMethodArgumentResolver();
     }
 
 
 }
+

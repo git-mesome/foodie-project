@@ -127,7 +127,9 @@ public class PostService {
                         post.getHit(),
                         checkLikeStateByAccountIdAndPostId(accountId, post.getId()),
                         post.getLikesCount(),
-                        post.getUpdateDate()))
+                        post.getUpdateDate(),
+                        post.getPostImages().stream()
+                            .map(PostImage::getPostImagePath).toList().get(0)))
                 .toList();
 
     }

@@ -8,16 +8,16 @@ public class SignInResponse {
 
     private final Long accountId;
     private final String nickname;
-    private final String imageUrl;
+    private final String profileImagePath;
     private String accessToken;
     private String refreshToken;
 
     public SignInResponse(final Long accountId,
                           final String nickname,
-                          final String imageUrl) {
+                          final String profileImagePath) {
         this.accountId = accountId;
         this.nickname = nickname;
-        this.imageUrl = imageUrl;
+        this.profileImagePath = profileImagePath;
     }
 
     public void setToken(final String accessToken, final String refreshToken) {

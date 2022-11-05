@@ -21,16 +21,36 @@ public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificat
 
     List<Post> findTop4ByPostTypeOrderByHitDesc(final PostType postType);
 
-    @Query("select p from Post p where p.author.id = :authorId and p.postType not in (:recipe) order by p.createDate desc ")
+    @Query("""
+            select p
+            from Post p 
+            where p.author.id = :authorId 
+            and p.postType 
+            not in (:recipe) 
+            order by p.createDate desc 
+            """)
     List<Post> findAllSharedPostByAuthorId(@Param("authorId") final Long authorId, @Param("recipe") final PostType recipe);
 
-    @Query("select p from Post p where p.taker.id = :accountId and p.postType not in (:recipe) and p.dealStatus = :finish order by p.createDate desc")
+    @Query("""
+            select p
+            from Post p
+            where p.taker.id = :accountId
+            and p.postType not in (:recipe)
+            and p.dealStatus = :finish
+            order by p.createDate desc
+            """)
     List<Post> findAllReceivedPostByTakerId(@Param("accountId") final Long accountId,
                                             @Param("recipe") final PostType recipe,
                                             @Param("finish") DealStatus finish);
 
 
-    @Query("SELECT p FROM Account a, Post p, Likes l WHERE l.post.id = p.id AND l.account.id = a.id AND l.account.id = :accountId")
+    @Query("""
+            SELECT p 
+            FROM Account a, Post p, Likes l 
+            WHERE l.post.id = p.id 
+            AND l.account.id = a.id 
+            AND l.account.id = :accountId
+            """)
     List<Post> findAllPostByLikesAccountId(final Long accountId);
 
     List<Post> searchByTitleContainingOrderByCreateDateDesc(final String keyword, final Pageable pageable);

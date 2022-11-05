@@ -6,9 +6,8 @@ public record SignUpRequest(String oauthId,
                             String email,
                             String profileImagePath,
                             String nickname,
-                            String phoneNumber,
-                            String grade) {
-    public Grade getGrade() {
-        return Grade.valueOf(this.grade.toUpperCase());
-    }
+                            String phoneNumber) {
+//    public Grade getGrade() {
+//        return Grade.valueOf(this.grade.toUpperCase());
+//    }
 }

@@ -1,4 +1,4 @@
-package io.wisoft.foodie.project.global.config.s3;
+package io.wisoft.foodie.project.global.config;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;

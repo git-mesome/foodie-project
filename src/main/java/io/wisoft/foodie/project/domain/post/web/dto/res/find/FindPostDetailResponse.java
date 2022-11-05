@@ -1,4 +1,4 @@
-package io.wisoft.foodie.project.domain.post.web.dto.res;
+package io.wisoft.foodie.project.domain.post.web.dto.res.find;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.wisoft.foodie.project.domain.post.persistance.DealStatus;
