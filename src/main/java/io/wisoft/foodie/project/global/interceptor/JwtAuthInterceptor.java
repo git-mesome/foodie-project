@@ -28,12 +28,12 @@ public class JwtAuthInterceptor implements HandlerInterceptor {
                              final HttpServletResponse response,
                              final Object handler) {
 
-//        if(Objects.equals(request.getMethod(), "OPTIONS")){
-//            response.setStatus(HttpServletResponse.SC_OK);
-//        }
+        if (request.getMethod().equals("OPTIONS")) {
+            return true;
+        }
         final Long accountId = generateAccountIdFromRequest(request);
         request.setAttribute("id", accountId);
-        if (request.getRequestURI().startsWith("/posts") && request.getMethod().equals("GET")) {
+        if (request.getRequestURI().startsWith("/api/posts") && request.getMethod().equals("GET")) {
             return true;
         } else if (accountId != null) {
             // TODO: 검증이 필요함 에러 던지기 나중에 꼭 할것!
@@ -45,6 +45,7 @@ public class JwtAuthInterceptor implements HandlerInterceptor {
 
     private Long generateAccountIdFromRequest(final HttpServletRequest request) {
         final String accessToken = authorizationExtractor.extract(request, "Bearer ");
+        System.out.println("AAAAACCCC" + accessToken);
         if (accessToken.isEmpty()) {
             return null;
         } else {
