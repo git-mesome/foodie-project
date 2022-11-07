@@ -3,7 +3,6 @@ package io.wisoft.foodie.project.domain.post.web;
 import io.wisoft.foodie.project.domain.image.application.S3Service;
 import io.wisoft.foodie.project.domain.post.persistance.DealStatus;
 import io.wisoft.foodie.project.domain.post.persistance.PostType;
-import io.wisoft.foodie.project.domain.post.web.dto.req.DeletePostImageRequest;
 import io.wisoft.foodie.project.domain.post.web.dto.req.UpdatePostRequest;
 import io.wisoft.foodie.project.domain.post.web.dto.req.RegisterPostRequest;
 import io.wisoft.foodie.project.domain.post.web.dto.res.*;
@@ -156,10 +155,7 @@ public class PostController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<DeletePostResponse> delete(@PathVariable("id") final Long id,
-                                                     @RequestBody final DeletePostImageRequest request,
                                                      @AccountIdentifier final Long accountId) {
-
-        s3Service.deleteFileList(request.imageNameList());
 
         return ResponseEntity
                 .ok(postService.delete(id, accountId));

@@ -2,6 +2,7 @@ package io.wisoft.foodie.project.domain.post.application;
 
 import io.wisoft.foodie.project.domain.account.persistance.Account;
 import io.wisoft.foodie.project.domain.account.persistance.AccountRepository;
+import io.wisoft.foodie.project.domain.image.application.S3Service;
 import io.wisoft.foodie.project.domain.image.persistance.ImageRepository;
 import io.wisoft.foodie.project.domain.image.persistance.PostImage;
 import io.wisoft.foodie.project.domain.post.persistance.*;
@@ -9,7 +10,6 @@ import io.wisoft.foodie.project.domain.post.persistance.category.Category;
 import io.wisoft.foodie.project.domain.post.persistance.category.CategoryRepository;
 import io.wisoft.foodie.project.domain.post.persistance.likes.Likes;
 import io.wisoft.foodie.project.domain.post.persistance.likes.LikesRepository;
-import io.wisoft.foodie.project.domain.post.web.dto.req.DeletePostImageRequest;
 import io.wisoft.foodie.project.domain.post.web.dto.req.RegisterPostRequest;
 import io.wisoft.foodie.project.domain.post.web.dto.req.UpdatePostRequest;
 import io.wisoft.foodie.project.domain.post.web.dto.res.*;
@@ -33,18 +33,21 @@ public class PostService {
     private final ImageRepository imageRepository;
     private final CategoryRepository categoryRepository;
     private final LikesRepository likesRepository;
+    private final S3Service s3Service;
 
     @Autowired
     public PostService(final PostRepository postRepository,
                        final AccountRepository accountRepository,
                        final ImageRepository imageRepository,
                        final CategoryRepository categoryRepository,
-                       final LikesRepository likesRepository) {
+                       final LikesRepository likesRepository,
+                       final S3Service s3Service) {
         this.postRepository = postRepository;
         this.accountRepository = accountRepository;
         this.imageRepository = imageRepository;
         this.categoryRepository = categoryRepository;
         this.likesRepository = likesRepository;
+        this.s3Service = s3Service;
     }
 
     @Transactional
@@ -271,15 +274,9 @@ public class PostService {
     }
 
     private Boolean checkLikeStateByAccountIdAndPostId(final Long accountId, final Long postId) {
-        final Boolean likesState;
-
         if (accountId == null) {
-            likesState = false;
-        } else {
-            Optional<Likes> likes = this.likesRepository.findLikesByAccountIdAndPostId(accountId, postId);
-            likesState = likes.isPresent();
-        }
-        return likesState;
+            return false;
+        } else return this.likesRepository.findLikesByAccountIdAndPostId(accountId, postId).isPresent();
     }
 
     @Transactional
@@ -326,6 +323,13 @@ public class PostService {
 
         final Post post = postRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
+
+
+        s3Service.deleteFileList(
+            post.getPostImages()
+            .stream()
+            .map(PostImage::getPostImagePath)
+            .toList());
 
         authorVerification(post, authorId);
 

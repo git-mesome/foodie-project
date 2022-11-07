@@ -1,4 +1,4 @@
-package io.wisoft.foodie.project.domain.post.web.dto.req;
+package io.wisoft.foodie.project.domain.post.web.dto.res;
 
 import java.util.List;
 
