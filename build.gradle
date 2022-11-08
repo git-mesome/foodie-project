@@ -25,12 +25,16 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.jetbrains:annotations:23.0.0'
 	implementation 'org.springframework.boot:spring-boot-starter-test'
-	implementation 'org.springframework.boot:spring-boot-devtools:2.7.3'
+	implementation 'org.springframework.boot:spring-boot-devtools:2.7.5'
 	implementation 'com.amazonaws:aws-java-sdk:1.12.307'
-	implementation 'org.springframework.boot:spring-boot-configuration-processor:2.7.3'
-	implementation 'org.springframework.boot:spring-boot-starter-webflux:2.7.3'
+	implementation 'org.springframework.boot:spring-boot-configuration-processor:2.7.5'
 
+	//websocket
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	implementation 'org.webjars:sockjs-client:1.1.2'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis:2.7.5'
 
+	//jwt
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
