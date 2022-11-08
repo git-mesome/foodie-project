@@ -7,7 +7,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Objects;
 
 @Component
 public class JwtAuthInterceptor implements HandlerInterceptor {
@@ -45,7 +44,6 @@ public class JwtAuthInterceptor implements HandlerInterceptor {
 
     private Long generateAccountIdFromRequest(final HttpServletRequest request) {
         final String accessToken = authorizationExtractor.extract(request, "Bearer ");
-        System.out.println("AAAAACCCC" + accessToken);
         if (accessToken.isEmpty()) {
             return null;
         } else {

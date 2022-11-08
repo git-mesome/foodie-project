@@ -56,15 +56,15 @@ public class PostService {
                                          final Long authorId) {
 
         final Account account = accountRepository.findById(authorId)
-                .orElseThrow(() -> new AccountNotFoundException("존재하지 않는 회원정보입니다."));
+            .orElseThrow(() -> new AccountNotFoundException("존재하지 않는 회원정보입니다."));
         final Category category = categoryRepository.findByName(request.category());
 
         final Post post = postRepository.save(new Post(
-                account,
-                request.title(),
-                request.content(),
-                category,
-                request.getPostType()
+            account,
+            request.title(),
+            request.content(),
+            category,
+            request.getPostType()
         ));
 
         final List<PostImage> imageList = new ArrayList<>();
@@ -82,29 +82,29 @@ public class PostService {
     public FindPostDetailResponse findById(final Long id, final Long accountId) {
 
         final Post post = postRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
+            .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
 
         post.increaseHit();
 
         return new FindPostDetailResponse(
-                post.getId(),
-                post.getAuthor().getNickname(),
-                post.getAuthor().getProfileImagePath(),
-                post.getAuthor().getGrade(),
-                post.getTitle(),
-                post.getContent(),
-                post.getHit(),
-                checkLikeStateByAccountIdAndPostId(accountId, post.getId()),
-                post.getLikesCount(),
-                post.getAuthor().getSiDo(),
-                post.getAuthor().getSiGunGu(),
-                post.getAuthor().getEupMyeonDong(),
-                post.getDealStatus(),
-                post.getCreateDate(),
-                post.getPostImages()
-                        .stream()
-                        .map(PostImage::getPostImagePath)
-                        .toList()
+            post.getId(),
+            post.getAuthor().getNickname(),
+            post.getAuthor().getProfileImagePath(),
+            post.getAuthor().getGrade(),
+            post.getTitle(),
+            post.getContent(),
+            post.getHit(),
+            checkLikeStateByAccountIdAndPostId(accountId, post.getId()),
+            post.getLikesCount(),
+            post.getAuthor().getSiDo(),
+            post.getAuthor().getSiGunGu(),
+            post.getAuthor().getEupMyeonDong(),
+            post.getDealStatus(),
+            post.getCreateDate(),
+            post.getPostImages()
+                .stream()
+                .map(PostImage::getPostImagePath)
+                .toList()
         );
 
     }
@@ -116,24 +116,24 @@ public class PostService {
                                               final Optional<String> popular,
                                               final Long accountId) {
         List<Post> postList =
-                popular.isPresent()
-                        ? this.postRepository.findTop4ByPostTypeOrderByHitDesc(postType)
+            popular.isPresent()
+                ? this.postRepository.findTop4ByPostTypeOrderByHitDesc(postType)
 //                        : orderByOptions.isPresent()
 //                        ? this.postRepository.findAllByOrderByCreateDateAndDistanceAsc()
-                        : this.postRepository.findByPostTypeOrderByCreateDateDesc(postType, pageable);
+                : this.postRepository.findByPostTypeOrderByCreateDateDesc(postType, pageable);
 
         return postList.stream()
-                .map(post -> new FindAllPostsResponse(
-                        post.getId(),
-                        post.getAuthor().getNickname(),
-                        post.getTitle(),
-                        post.getHit(),
-                        checkLikeStateByAccountIdAndPostId(accountId, post.getId()),
-                        post.getLikesCount(),
-                        post.getUpdateDate(),
-                        post.getPostImages().stream()
-                            .map(PostImage::getPostImagePath).toList().get(0)))
-                .toList();
+            .map(post -> new FindAllPostsResponse(
+                post.getId(),
+                post.getAuthor().getNickname(),
+                post.getTitle(),
+                post.getHit(),
+                checkLikeStateByAccountIdAndPostId(accountId, post.getId()),
+                post.getLikesCount(),
+                post.getUpdateDate(),
+                post.getPostImages().stream()
+                    .map(PostImage::getPostImagePath).toList().get(0)))
+            .toList();
 
     }
 
@@ -143,15 +143,15 @@ public class PostService {
         List<Post> postList = this.postRepository.findAllSharedPostByAuthorId(authorId, PostType.RECIPE);
 
         return postList.stream()
-                .map(post -> new FindAllSharedPostsResponse(
-                        post.getId(),
-                        post.getTitle(),
-                        Optional
-                                .ofNullable(post.getTaker())
-                                .map(Account::getNickname)
-                                .orElse(null),
-                        post.getDealStatus()
-                )).toList();
+            .map(post -> new FindAllSharedPostsResponse(
+                post.getId(),
+                post.getTitle(),
+                Optional
+                    .ofNullable(post.getTaker())
+                    .map(Account::getNickname)
+                    .orElse(null),
+                post.getDealStatus()
+            )).toList();
 
     }
 
@@ -176,12 +176,12 @@ public class PostService {
         List<Post> postList = this.postRepository.findAllPostByLikesAccountId(accountId);
 
         return postList.stream()
-                .map(post -> new FindAllLikesResponse(
-                        post.getId(),
-                        post.getTitle(),
-                        post.getAuthor().getNickname(),
-                        post.getLikesCount()
-                )).toList();
+            .map(post -> new FindAllLikesResponse(
+                post.getId(),
+                post.getTitle(),
+                post.getAuthor().getNickname(),
+                post.getLikesCount()
+            )).toList();
 
     }
 
@@ -192,20 +192,20 @@ public class PostService {
                                                   final Long accountId) {
 
         List<Post> postList =
-                postType.isPresent()
-                        ? this.postRepository.findByPostTypeOrderByCreateDateDesc(postType.get(), pageable)
-                        : this.postRepository.searchByTitleContainingOrderByCreateDateDesc(keyword, pageable);
+            postType.isPresent()
+                ? this.postRepository.findByPostTypeOrderByCreateDateDesc(postType.get(), pageable)
+                : this.postRepository.searchByTitleContainingOrderByCreateDateDesc(keyword, pageable);
 
         return postList.stream()
-                .map(post -> new SearchPostResponse(
-                        post.getId(),
-                        post.getAuthor().getNickname(),
-                        post.getTitle(),
-                        post.getHit(),
-                        checkLikeStateByAccountIdAndPostId(accountId, post.getId()),
-                        post.getLikesCount(),
-                        post.getUpdateDate()
-                )).toList();
+            .map(post -> new SearchPostResponse(
+                post.getId(),
+                post.getAuthor().getNickname(),
+                post.getTitle(),
+                post.getHit(),
+                checkLikeStateByAccountIdAndPostId(accountId, post.getId()),
+                post.getLikesCount(),
+                post.getUpdateDate()
+            )).toList();
 
     }
 
@@ -213,16 +213,16 @@ public class PostService {
     public UpdatePostResponse update(final Long id, final UpdatePostRequest request, final Long authorId) {
 
         final Post post = postRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다. id=" + id));
+            .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다. id=" + id));
 
         authorVerification(post, authorId);
 
         final Category category = categoryRepository.findByName(request.category());
 
         post.update(
-                request.title(),
-                request.content(),
-                category);
+            request.title(),
+            request.content(),
+            category);
 
         postRepository.save(post);
 
@@ -237,7 +237,7 @@ public class PostService {
                                            final List<String> imagePathList,
                                            final Long authorId) {
         final Post post = postRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시물입니다."));
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시물입니다."));
 
         authorVerification(post, authorId);
 
@@ -263,7 +263,7 @@ public class PostService {
                                                final DealStatus dealStatus,
                                                final Long authorId) {
         final Post post = postRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시물입니다."));
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시물입니다."));
 
         authorVerification(post, authorId);
 
@@ -276,60 +276,62 @@ public class PostService {
     private Boolean checkLikeStateByAccountIdAndPostId(final Long accountId, final Long postId) {
         if (accountId == null) {
             return false;
-        } else return this.likesRepository.findLikesByAccountIdAndPostId(accountId, postId).isPresent();
+        } else {
+            return this.likesRepository.findLikesByAccountIdAndPostId(accountId, postId).isPresent();
+        }
     }
 
     @Transactional
     public LikesResponse likes(final Long id, final Long accountId) {
 
         final Account account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new AccountNotFoundException("존재하지 않는 회원정보입니다."));
+            .orElseThrow(() -> new AccountNotFoundException("존재하지 않는 회원정보입니다."));
         final Post post = postRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
+            .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
 
         if (likesRepository.findLikesByAccountIdAndPostId(account.getId(), post.getId()).isPresent()) {
-            throw new IllegalStateException("이미 찜한 게시글입니다.");
+            return unlikes(post.getId(),account.getId());
         }
 
-        final Likes likes = likesRepository.save(new Likes(account, post));
+        likesRepository.save(new Likes(account, post));
 
         postRepository.updateLikesCount(post.getId(), 1);
 
-        return new LikesResponse(
-                likes.getId(),
-                post.getLikesCount() + 1
-        );
+        return new LikesResponse(post.getLikesCount() + 1);
     }
 
     @Transactional
     public LikesResponse unlikes(final Long id, final Long accountId) {
 
         final Account account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new AccountNotFoundException("존재하지 않는 회원정보입니다."));
+            .orElseThrow(() -> new AccountNotFoundException("존재하지 않는 회원정보입니다."));
         final Post post = postRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
-        final Likes likes = likesRepository.findLikesByAccountIdAndPostId(account.getId(), post.getId())
-                .orElseThrow();
+            .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
+
+        if (likesRepository.findLikesByAccountIdAndPostId(account.getId(), post.getId()).isEmpty()) {
+            return likes( post.getId(),account.getId());
+        } else {
+            final Likes likes = likesRepository.findLikesByAccountIdAndPostId(account.getId(), post.getId()).get();
+            likesRepository.deleteById(likes.getId());
+            postRepository.updateLikesCount(post.getId(), -1);
+        }
 
 
-        likesRepository.delete(likes);
-        postRepository.updateLikesCount(post.getId(), -1);
-
-        return new LikesResponse(likes.getId(), post.getLikesCount() - 1);
+        return new LikesResponse(post.getLikesCount() - 1);
     }
 
     @Transactional
     public DeletePostResponse delete(final Long id, final Long authorId) {
 
         final Post post = postRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
+            .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
 
 
         s3Service.deleteFileList(
             post.getPostImages()
-            .stream()
-            .map(PostImage::getPostImagePath)
-            .toList());
+                .stream()
+                .map(PostImage::getPostImagePath)
+                .toList());
 
         authorVerification(post, authorId);
 
