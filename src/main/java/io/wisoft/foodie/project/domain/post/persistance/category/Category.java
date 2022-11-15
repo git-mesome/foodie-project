@@ -1,11 +1,13 @@
 package io.wisoft.foodie.project.domain.post.persistance.category;
 
 import io.wisoft.foodie.project.domain.post.persistance.Post;
+import lombok.Getter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 @Entity
 @Table(name = "category")
 public class Category {

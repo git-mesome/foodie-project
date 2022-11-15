@@ -29,7 +29,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
 
         registry.addMapping("/**")
-            .allowedOrigins("http://localhost:3000","http://172.21.122.39:3000", "http://172.23.226.105:3000", "http://172.23.225.159:3000")
+            .allowedOrigins("http://localhost:3000","http://172.21.122.39:3000", "http://172.23.226.105:3000", "http://172.23.225.159:3000","http://172.22.50.77:3000")
             .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
             .allowedHeaders("*")
             .exposedHeaders("Authorization")

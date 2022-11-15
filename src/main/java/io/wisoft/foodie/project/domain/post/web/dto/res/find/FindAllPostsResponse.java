@@ -6,8 +6,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public record FindAllPostsResponse(Long postId,
+                                   String authorProfileImagePath,
                                    String authorNickname,
                                    String title,
+                                   String gu,
+                                   String dong,
                                    Integer hit,
                                    Boolean likesState,
                                    Integer likesCount,

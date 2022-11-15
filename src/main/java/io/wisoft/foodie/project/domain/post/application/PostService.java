@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.stream.Collectors.toList;
+
 
 @Service
 public class PostService {
@@ -91,6 +93,7 @@ public class PostService {
             post.getAuthor().getNickname(),
             post.getAuthor().getProfileImagePath(),
             post.getAuthor().getGrade(),
+            post.getCategory().getName(),
             post.getTitle(),
             post.getContent(),
             post.getHit(),
@@ -99,6 +102,7 @@ public class PostService {
             post.getAuthor().getSiDo(),
             post.getAuthor().getSiGunGu(),
             post.getAuthor().getEupMyeonDong(),
+            post.getPostType(),
             post.getDealStatus(),
             post.getCreateDate(),
             post.getPostImages()
@@ -125,8 +129,11 @@ public class PostService {
         return postList.stream()
             .map(post -> new FindAllPostsResponse(
                 post.getId(),
+                post.getAuthor().getProfileImagePath(),
                 post.getAuthor().getNickname(),
                 post.getTitle(),
+                post.getAuthor().getSiGunGu(),
+                post.getAuthor().getEupMyeonDong(),
                 post.getHit(),
                 checkLikeStateByAccountIdAndPostId(accountId, post.getId()),
                 post.getLikesCount(),
@@ -199,13 +206,18 @@ public class PostService {
         return postList.stream()
             .map(post -> new SearchPostResponse(
                 post.getId(),
+                post.getAuthor().getProfileImagePath(),
                 post.getAuthor().getNickname(),
                 post.getTitle(),
+                post.getAuthor().getSiGunGu(),
+                post.getAuthor().getEupMyeonDong(),
                 post.getHit(),
                 checkLikeStateByAccountIdAndPostId(accountId, post.getId()),
                 post.getLikesCount(),
-                post.getUpdateDate()
-            )).toList();
+                post.getUpdateDate(),
+                post.getPostImages().stream()
+                    .map(PostImage::getPostImagePath).toList().get(0)))
+            .toList();
 
     }
 
