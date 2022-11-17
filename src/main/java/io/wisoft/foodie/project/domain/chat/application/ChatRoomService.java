@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ChatRoomService {
@@ -40,20 +41,26 @@ public class ChatRoomService {
     @Transactional
     public FindChatRoomResponse createOrFind(final Long postId,
                                              final Long senderId) {
-        System.out.println(senderId);
+
         final Account account = this.accountRepository.findById(senderId)
             .orElseThrow(() -> new AccountNotFoundException("존재하지 않는 회원정보입니다."));
         final Post post = this.postRepository.findById(postId)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시물입니다."));
 
 
-        final ChatRoom chatRoom =
-            this.chatRoomRepository.findByPostIdAndSenderId(post.getId(),account.getId())
-                .orElse(this.chatRoomRepository.save(new ChatRoom(
+        Optional<ChatRoom> optionalChatRoom;
+        ChatRoom chatRoom;
+        optionalChatRoom = this.chatRoomRepository.findByPostIdAndSenderId(post.getId(), post.getAuthor().getId(), account.getId());
+        if (optionalChatRoom.isEmpty()) {
+            chatRoom = this.chatRoomRepository.save(
+                new ChatRoom(
                     post,
                     post.getAuthor(),
                     account
-                )));
+                ));
+        } else {
+            chatRoom = optionalChatRoom.get();
+        }
 
         return new FindChatRoomResponse(chatRoom.getId());
 
@@ -67,7 +74,9 @@ public class ChatRoomService {
         return chatRoomList.stream()
             .map(chatRoom -> new FindAllChatRoomsResponse(
                 chatRoom.getId(),
-                chatRoom.getAuthor().getNickname()
+                chatRoom.getPost().getId(),
+                chatRoom.getAuthor().getNickname(),
+                chatRoom.getAuthor().getProfileImagePath()
             )).toList();
     }
 

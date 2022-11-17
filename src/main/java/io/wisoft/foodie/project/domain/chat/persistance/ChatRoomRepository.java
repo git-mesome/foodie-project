@@ -22,8 +22,9 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
             select c
             from ChatRoom c
             where c.post.id = :postId
+            and c.author.id = :authorId
             and c.sender.id = :senderId
             """)
-    Optional<ChatRoom> findByPostIdAndSenderId(final Long postId, final Long senderId);
+    Optional<ChatRoom> findByPostIdAndSenderId(final Long postId,final Long authorId, final Long senderId);
 
 }
