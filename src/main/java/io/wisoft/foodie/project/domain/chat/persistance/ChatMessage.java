@@ -9,9 +9,9 @@ import org.springframework.data.redis.core.RedisHash;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@RedisHash
 @Getter
 @NoArgsConstructor
+@Entity
 @Table(name = "chat_message")
 public class ChatMessage {
 
