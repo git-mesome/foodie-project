@@ -9,6 +9,7 @@ import io.wisoft.foodie.project.domain.chat.persistance.ChatRoomRepository;
 import io.wisoft.foodie.project.domain.chat.web.dto.res.FindAllChatRoomsResponse;
 import io.wisoft.foodie.project.domain.chat.web.dto.res.FindChatMessageDetailResponse;
 import io.wisoft.foodie.project.domain.chat.web.dto.res.FindChatRoomResponse;
+import io.wisoft.foodie.project.domain.image.persistance.PostImage;
 import io.wisoft.foodie.project.domain.post.persistance.Post;
 import io.wisoft.foodie.project.domain.post.persistance.PostRepository;
 import io.wisoft.foodie.project.exception.AccountNotFoundException;
@@ -76,7 +77,11 @@ public class ChatRoomService {
                 chatRoom.getId(),
                 chatRoom.getPost().getId(),
                 chatRoom.getAuthor().getNickname(),
-                chatRoom.getAuthor().getProfileImagePath()
+                chatRoom.getAuthor().getProfileImagePath(),
+                chatRoom.getSender().getNickname(),
+                chatRoom.getSender().getProfileImagePath(),
+                chatRoom.getPost().getTitle(),
+                chatRoom.getPost().getPostImages().stream().map(PostImage::getPostImagePath).toList().get(0)
             )).toList();
     }
 
@@ -93,6 +98,7 @@ public class ChatRoomService {
         return chatMessageList.stream()
             .map(chatMessage -> new FindChatMessageDetailResponse(
                 chatMessage.getId(),
+                chatMessage.getSender().getProfileImagePath(),
                 chatMessage.getSender().getNickname(),
                 chatMessage.getMessage(),
                 chatMessage.getCreateDate()

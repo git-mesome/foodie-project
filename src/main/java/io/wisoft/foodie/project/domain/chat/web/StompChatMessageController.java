@@ -3,7 +3,7 @@ package io.wisoft.foodie.project.domain.chat.web;
 import io.wisoft.foodie.project.domain.chat.application.ChatMessageService;
 import io.wisoft.foodie.project.domain.chat.persistance.ChatMessage;
 import io.wisoft.foodie.project.domain.chat.web.dto.req.FindChatMessageDetailRequest;
-import io.wisoft.foodie.project.domain.chat.web.dto.res.FindChatMessageDetailResponse;
+import io.wisoft.foodie.project.domain.chat.web.dto.res.FindChatMessageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -22,15 +22,16 @@ public class StompChatMessageController {
 
     @MessageMapping("/chat/{chat-room-id}")
     @SendTo("/sub/{chat-room-id}")
-    public FindChatMessageDetailResponse send(
+    public FindChatMessageResponse send(
         @DestinationVariable("chat-room-id") final Long chatRoomId,
         final FindChatMessageDetailRequest request
     ) {
         final ChatMessage message = chatMessageService
             .create(chatRoomId, request.senderId(), request.message());
 
-        return new FindChatMessageDetailResponse(
+        return new FindChatMessageResponse(
             chatRoomId,
+            message.getSender().getProfileImagePath(),
             message.getSender().getNickname(),
             message.getMessage(),
             message.getCreateDate()

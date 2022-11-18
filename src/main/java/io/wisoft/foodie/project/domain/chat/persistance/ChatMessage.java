@@ -4,11 +4,12 @@ import io.wisoft.foodie.project.domain.account.persistance.Account;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 @NoArgsConstructor
 @Entity
@@ -29,9 +30,8 @@ public class ChatMessage {
 
     private String message;
 
-    @CreatedDate
-    @Column(name = "create_date")
-    private LocalDateTime createDate;
+        @CreatedDate
+        private LocalDateTime createDate;
 
     public ChatMessage(final ChatRoom chatRoom,
                        final Account sender,
