@@ -13,7 +13,7 @@ public class StompWebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/chats")
-            .setAllowedOriginPatterns("http://localhost:9090","chrome-extension://ggnhohnkfcpcanfekomdkjffnfcjnjam")
+            .setAllowedOriginPatterns("http://localhost:9090","chrome-extension://ggnhohnkfcpcanfekomdkjffnfcjnjam","http://172.22.62.175:3000","http://foodie.wisoft.io")
             .withSockJS();
     }
 
