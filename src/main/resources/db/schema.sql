@@ -14,7 +14,7 @@ CREATE TABLE account
     profile_image_path VARCHAR        NOT NULL,
     nickname           VARCHAR(20)    NOT NULL,
     phone_number       VARCHAR(15)    NOT NULL,
-    grade              VARCHAR        NOT NULL DEFAULT 'VIP',
+    grade              VARCHAR        NOT NULL DEFAULT 'BASIC',
     si_do              VARCHAR(14),
     si_gun_gu          VARCHAR(10),
     eup_myeon_dong     VARCHAR(10),
