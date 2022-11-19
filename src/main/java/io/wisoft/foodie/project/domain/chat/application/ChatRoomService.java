@@ -81,7 +81,8 @@ public class ChatRoomService {
                 chatRoom.getSender().getNickname(),
                 chatRoom.getSender().getProfileImagePath(),
                 chatRoom.getPost().getTitle(),
-                chatRoom.getPost().getPostImages().stream().map(PostImage::getPostImagePath).toList().get(0)
+                chatRoom.getPost().getPostImages().stream().map(PostImage::getPostImagePath).toList().get(0),
+                chatRoom.getPost().getDealStatus()
             )).toList();
     }
 

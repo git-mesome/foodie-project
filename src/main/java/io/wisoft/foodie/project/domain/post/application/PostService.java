@@ -139,7 +139,9 @@ public class PostService {
                 post.getLikesCount(),
                 post.getUpdateDate(),
                 post.getPostImages().stream()
-                    .map(PostImage::getPostImagePath).toList().get(0)))
+                    .map(PostImage::getPostImagePath).toList().get(0),
+                post.getDealStatus()
+            ))
             .toList();
 
     }
