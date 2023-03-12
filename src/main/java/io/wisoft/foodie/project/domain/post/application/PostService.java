@@ -358,7 +358,7 @@ public class PostService {
     public void authorVerification(final Post post, final Long authorId) {
 
         if (!post.getAuthor().getId().equals(authorId))
-            throw new PostException(ErrorCode.WRONG_ACCESS_POST_UPDATE);
+            throw new PostException(ErrorCode.UNAUTHORIZED_POST_EDIT);
 
     }
 

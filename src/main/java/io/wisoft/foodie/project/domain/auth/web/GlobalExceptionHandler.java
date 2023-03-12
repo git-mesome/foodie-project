@@ -1,9 +1,8 @@
 package io.wisoft.foodie.project.domain.auth.web;
 
 import io.jsonwebtoken.JwtException;
-import io.wisoft.foodie.project.domain.auth.exception.AccountException;
+import io.wisoft.foodie.project.domain.auth.exception.*;
 import io.wisoft.foodie.project.domain.auth.web.dto.res.ErrorResponse;
-import io.wisoft.foodie.project.domain.auth.exception.InvalidTokenException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,6 +20,27 @@ public class GlobalExceptionHandler{
 
     @ExceptionHandler(AccountException.class)
     public ResponseEntity<ErrorResponse> handleAccountException(AccountException e){
+
+        return buildErrorResponse(e.getErrorCode());
+
+    }
+
+    @ExceptionHandler(PostException.class)
+    public ResponseEntity<ErrorResponse> handlePostException(PostException e){
+
+        return buildErrorResponse(e.getErrorCode());
+
+    }
+
+    @ExceptionHandler(ChatRoomException.class)
+    public ResponseEntity<ErrorResponse> handleChatRoomException(ChatRoomException e){
+
+        return buildErrorResponse(e.getErrorCode());
+
+    }
+
+    @ExceptionHandler(ImageException.class)
+    public ResponseEntity<ErrorResponse> handleImageException(ImageException e){
 
         return buildErrorResponse(e.getErrorCode());
 

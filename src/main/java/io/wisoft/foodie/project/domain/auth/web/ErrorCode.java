@@ -9,7 +9,11 @@ public enum ErrorCode {
     NOT_FOUND_ACCOUNT("A001", "Account not found", HttpStatus.NOT_FOUND),
     NOT_FOUND_CHAT_ROOM("CR01", "ChatRoom not found", HttpStatus.NOT_FOUND),
     NOT_FOUND_POST("P001", "Post not found", HttpStatus.NOT_FOUND),
-    WRONG_ACCESS_POST_UPDATE("P002", "Unauthorized post edit", HttpStatus.BAD_REQUEST),
+    UNAUTHORIZED_POST_EDIT("P002", "Unauthorized post edit", HttpStatus.BAD_REQUEST),
+
+    UNSUPPORTED_IMAGE_FORMAT("I002", "Unsupported image file format", HttpStatus.BAD_REQUEST),
+    IMAGE_UPLOAD_ERROR("I003", "Image upload error", HttpStatus.BAD_REQUEST),
+    INVALID_URL_FORMAT("I005", "Invalid URL format", HttpStatus.INTERNAL_SERVER_ERROR),
 
     //token
     INVALID_TOKEN("T001", "Token ", HttpStatus.UNAUTHORIZED),

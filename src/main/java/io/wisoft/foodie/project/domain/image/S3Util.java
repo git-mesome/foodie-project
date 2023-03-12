@@ -3,6 +3,8 @@ package io.wisoft.foodie.project.domain.image;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.*;
+import io.wisoft.foodie.project.domain.auth.exception.ImageException;
+import io.wisoft.foodie.project.domain.auth.web.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,7 +31,7 @@ public class S3Util {
     public String bucket;
 
     public List<String> uploadFileList(final List<MultipartFile> multipartFiles,
-                                       final String dirName) throws IOException {
+                                       final String dirName) {
 
         //Todo 파일 업로드 개수 지정
 
@@ -44,7 +46,7 @@ public class S3Util {
     }
 
     public String uploadFile(final MultipartFile file,
-                             final String dirName) throws IOException {
+                             final String dirName) {
 
         final String fileName = createFileName(StringUtils
                 .cleanPath(Objects.requireNonNull(file.getOriginalFilename())), dirName);
@@ -59,7 +61,7 @@ public class S3Util {
             return putS3(inputStream, fileName, objectMetadata);
 
         } catch (IOException e) {
-            throw new IllegalArgumentException("이미지 업로드 에러");
+            throw new ImageException(ErrorCode.IMAGE_UPLOAD_ERROR);
         }
 
 
@@ -95,15 +97,15 @@ public class S3Util {
         final String idxFileName = fileName.substring(fileName.lastIndexOf("."));
 
         if (!fileValidate.contains(idxFileName)) {
-            throw new IllegalArgumentException("이미지 파일 형식이 아닙니다.");
+            throw new ImageException(ErrorCode.UNSUPPORTED_IMAGE_FORMAT);
         }
 
         return fileName.substring(fileName.lastIndexOf("."));
     }
 
-    public void deleteFileList(List<String> fileNameList){
+    public void deleteFileList(List<String> fileNameList) {
 
-        for(String fileName : fileNameList){
+        for (String fileName : fileNameList) {
             deleteFile(fileName);
         }
 
@@ -113,7 +115,7 @@ public class S3Util {
         try {
             final DeleteObjectRequest request = new DeleteObjectRequest(this.bucket, fileName);
             amazonS3Client.deleteObject(request);
-        }catch (AmazonServiceException e){
+        } catch (AmazonServiceException e) {
             System.out.println(e.getMessage());
         }
 

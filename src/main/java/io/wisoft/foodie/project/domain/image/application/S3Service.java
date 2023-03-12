@@ -1,5 +1,7 @@
 package io.wisoft.foodie.project.domain.image.application;
 
+import io.wisoft.foodie.project.domain.auth.exception.ImageException;
+import io.wisoft.foodie.project.domain.auth.web.ErrorCode;
 import io.wisoft.foodie.project.domain.image.S3Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +34,7 @@ public class S3Service {
                     try {
                         return new URL(item).getFile().substring(1);
                     } catch (MalformedURLException e) {
-                        throw new RuntimeException(e);
+                        throw new ImageException(ErrorCode.INVALID_URL_FORMAT);
                     }
                 }).toList());
     }
