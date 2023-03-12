@@ -1,6 +1,7 @@
 package io.wisoft.foodie.project.domain.chat.application;
 
 import io.wisoft.foodie.project.domain.auth.exception.ChatRoomException;
+import io.wisoft.foodie.project.domain.auth.exception.PostException;
 import io.wisoft.foodie.project.domain.auth.web.ErrorCode;
 import io.wisoft.foodie.project.domain.auth.exception.AccountException;
 import io.wisoft.foodie.project.domain.account.persistance.Account;
@@ -48,12 +49,16 @@ public class ChatRoomService {
         final Account account = this.accountRepository.findById(senderId)
             .orElseThrow(() -> new AccountException(ErrorCode.NOT_FOUND_ACCOUNT));
         final Post post = this.postRepository.findById(postId)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시물입니다."));
+            .orElseThrow(() -> new PostException(ErrorCode.NOT_FOUND_POST));
 
 
         Optional<ChatRoom> optionalChatRoom;
         ChatRoom chatRoom;
-        optionalChatRoom = this.chatRoomRepository.findByPostIdAndSenderId(post.getId(), post.getAuthor().getId(), account.getId());
+        optionalChatRoom = this.chatRoomRepository.findByPostIdAndSenderId(
+                post.getId(),
+                post.getAuthor().getId(),
+                account.getId());
+
         if (optionalChatRoom.isEmpty()) {
             chatRoom = this.chatRoomRepository.save(
                 new ChatRoom(

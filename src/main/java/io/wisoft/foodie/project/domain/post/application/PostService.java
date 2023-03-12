@@ -1,5 +1,6 @@
 package io.wisoft.foodie.project.domain.post.application;
 
+import io.wisoft.foodie.project.domain.auth.exception.PostException;
 import io.wisoft.foodie.project.domain.auth.web.ErrorCode;
 import io.wisoft.foodie.project.domain.auth.exception.AccountException;
 import io.wisoft.foodie.project.domain.account.persistance.Account;
@@ -83,7 +84,7 @@ public class PostService {
     public FindPostDetailResponse findById(final Long id, final Long accountId) {
 
         final Post post = postRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
+            .orElseThrow(() -> new PostException(ErrorCode.NOT_FOUND_POST));
 
         post.increaseHit();
 
@@ -226,7 +227,7 @@ public class PostService {
     public UpdatePostResponse update(final Long id, final UpdatePostRequest request, final Long authorId) {
 
         final Post post = postRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다. id=" + id));
+            .orElseThrow(() -> new PostException(ErrorCode.NOT_FOUND_POST));
 
         authorVerification(post, authorId);
 
@@ -250,7 +251,7 @@ public class PostService {
                                            final List<String> imagePathList,
                                            final Long authorId) {
         final Post post = postRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시물입니다."));
+            .orElseThrow(() -> new PostException(ErrorCode.NOT_FOUND_POST));
 
         authorVerification(post, authorId);
 
@@ -276,7 +277,7 @@ public class PostService {
                                                final DealStatus dealStatus,
                                                final Long authorId) {
         final Post post = postRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시물입니다."));
+            .orElseThrow(() -> new PostException(ErrorCode.NOT_FOUND_POST));
 
         authorVerification(post, authorId);
 
@@ -300,7 +301,7 @@ public class PostService {
         final Account account = accountRepository.findById(accountId)
             .orElseThrow(() -> new AccountException(ErrorCode.NOT_FOUND_ACCOUNT));
         final Post post = postRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
+            .orElseThrow(() -> new PostException(ErrorCode.NOT_FOUND_CHAT_ROOM));
 
         if (likesRepository.findLikesByAccountIdAndPostId(account.getId(), post.getId()).isPresent()) {
             return unlikes(post.getId(),account.getId());
@@ -319,7 +320,7 @@ public class PostService {
         final Account account = accountRepository.findById(accountId)
             .orElseThrow(() -> new AccountException(ErrorCode.NOT_FOUND_ACCOUNT));
         final Post post = postRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
+            .orElseThrow(() -> new PostException(ErrorCode.NOT_FOUND_POST));
 
         if (likesRepository.findLikesByAccountIdAndPostId(account.getId(), post.getId()).isEmpty()) {
             return likes( post.getId(),account.getId());
@@ -337,7 +338,7 @@ public class PostService {
     public DeletePostResponse delete(final Long id, final Long authorId) {
 
         final Post post = postRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
+            .orElseThrow(() -> new PostException(ErrorCode.NOT_FOUND_POST));
 
 
         s3Service.deleteFileList(
@@ -357,7 +358,7 @@ public class PostService {
     public void authorVerification(final Post post, final Long authorId) {
 
         if (!post.getAuthor().getId().equals(authorId))
-            throw new IllegalStateException("게시글을 수정할 권한이 없습니다.");
+            throw new PostException(ErrorCode.WRONG_ACCESS_POST_UPDATE);
 
     }
 
