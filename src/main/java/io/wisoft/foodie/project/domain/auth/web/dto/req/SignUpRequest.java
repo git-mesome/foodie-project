@@ -1,4 +1,4 @@
-package io.wisoft.foodie.project.domain.account.web.dto.req;
+package io.wisoft.foodie.project.domain.auth.web.dto.req;
 
 import io.wisoft.foodie.project.domain.post.persistance.Grade;
 

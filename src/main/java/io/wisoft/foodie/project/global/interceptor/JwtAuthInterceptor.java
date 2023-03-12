@@ -1,5 +1,8 @@
 package io.wisoft.foodie.project.global.interceptor;
 
+import io.wisoft.foodie.project.domain.auth.exception.AccountException;
+import io.wisoft.foodie.project.domain.auth.web.ErrorCode;
+import io.wisoft.foodie.project.domain.auth.exception.InvalidTokenException;
 import io.wisoft.foodie.project.global.token.AuthorizationExtractor;
 import io.wisoft.foodie.project.global.token.JwtTokenProvider;
 import org.springframework.stereotype.Component;
@@ -7,6 +10,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.nio.file.AccessDeniedException;
 
 @Component
 public class JwtAuthInterceptor implements HandlerInterceptor {
@@ -25,30 +29,39 @@ public class JwtAuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(final HttpServletRequest request,
                              final HttpServletResponse response,
-                             final Object handler) {
+                             final Object handler) throws Exception {
 
+        //OPTIONS 요청 허용
         if (request.getMethod().equals("OPTIONS")) {
             return true;
         }
+
         final Long accountId = generateAccountIdFromRequest(request);
         request.setAttribute("id", accountId);
-        if (request.getRequestURI().startsWith("/api/posts") && request.getMethod().equals("GET")) {
-            return true;
-        } else if (accountId != null) {
-            // TODO: 검증이 필요함 에러 던지기 나중에 꼭 할것!
-            return true;
-        } else
-            throw new IllegalStateException("토큰이 비었습니다.");
 
+        if (isGetRequestForPosts(request)) {
+            return true;
+        }
+
+        if (accountId == null) {
+            throw new AccountException(ErrorCode.ACCOUNT_NOT_FOUND);
+        }
+
+        throw new AccessDeniedException("Access is denied");
+
+    }
+
+    private boolean isGetRequestForPosts(final HttpServletRequest request) {
+        return request.getRequestURI().startsWith("/api/posts") && request.getMethod().equals("GET");
     }
 
     private Long generateAccountIdFromRequest(final HttpServletRequest request) {
         final String accessToken = authorizationExtractor.extract(request, "Bearer ");
-        if (accessToken.isEmpty()) {
+        if (accessToken == null || accessToken.isEmpty()) {
             return null;
         } else {
             if (!jwtTokenProvider.validateToken(accessToken)) {
-                throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
+                throw new InvalidTokenException(ErrorCode.INVALID_TOKEN);
             }
             return jwtTokenProvider.getPayload(accessToken);
         }

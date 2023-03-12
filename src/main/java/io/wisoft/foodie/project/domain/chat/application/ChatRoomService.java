@@ -1,5 +1,7 @@
 package io.wisoft.foodie.project.domain.chat.application;
 
+import io.wisoft.foodie.project.domain.auth.web.ErrorCode;
+import io.wisoft.foodie.project.domain.auth.exception.AccountException;
 import io.wisoft.foodie.project.domain.account.persistance.Account;
 import io.wisoft.foodie.project.domain.account.persistance.AccountRepository;
 import io.wisoft.foodie.project.domain.chat.persistance.ChatMessage;
@@ -12,7 +14,6 @@ import io.wisoft.foodie.project.domain.chat.web.dto.res.FindChatRoomResponse;
 import io.wisoft.foodie.project.domain.image.persistance.PostImage;
 import io.wisoft.foodie.project.domain.post.persistance.Post;
 import io.wisoft.foodie.project.domain.post.persistance.PostRepository;
-import io.wisoft.foodie.project.exception.AccountNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,7 +45,7 @@ public class ChatRoomService {
                                              final Long senderId) {
 
         final Account account = this.accountRepository.findById(senderId)
-            .orElseThrow(() -> new AccountNotFoundException("존재하지 않는 회원정보입니다."));
+            .orElseThrow(() -> new AccountException(ErrorCode.ACCOUNT_NOT_FOUND));
         final Post post = this.postRepository.findById(postId)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시물입니다."));
 
@@ -92,7 +93,7 @@ public class ChatRoomService {
         final ChatRoom chatRoom = this.chatRoomRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 채팅방입니다."));
         final Account account = this.accountRepository.findById(accountId)
-            .orElseThrow(() -> new AccountNotFoundException("존재하지 않는 회원정보입니다."));
+            .orElseThrow(() -> new AccountException(ErrorCode.ACCOUNT_NOT_FOUND));
 
         List<ChatMessage> chatMessageList = chatMessageRepository.findByChatRoomId(chatRoom.getId());
 

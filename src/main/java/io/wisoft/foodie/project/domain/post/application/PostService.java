@@ -1,5 +1,7 @@
 package io.wisoft.foodie.project.domain.post.application;
 
+import io.wisoft.foodie.project.domain.auth.web.ErrorCode;
+import io.wisoft.foodie.project.domain.auth.exception.AccountException;
 import io.wisoft.foodie.project.domain.account.persistance.Account;
 import io.wisoft.foodie.project.domain.account.persistance.AccountRepository;
 import io.wisoft.foodie.project.domain.image.application.S3Service;
@@ -14,7 +16,6 @@ import io.wisoft.foodie.project.domain.post.web.dto.req.RegisterPostRequest;
 import io.wisoft.foodie.project.domain.post.web.dto.req.UpdatePostRequest;
 import io.wisoft.foodie.project.domain.post.web.dto.res.*;
 import io.wisoft.foodie.project.domain.post.web.dto.res.find.*;
-import io.wisoft.foodie.project.exception.AccountNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,8 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static java.util.stream.Collectors.toList;
 
 
 @Service
@@ -58,7 +57,7 @@ public class PostService {
                                          final Long authorId) {
 
         final Account account = accountRepository.findById(authorId)
-            .orElseThrow(() -> new AccountNotFoundException("존재하지 않는 회원정보입니다."));
+            .orElseThrow(() -> new AccountException(ErrorCode.ACCOUNT_NOT_FOUND));
         final Category category = categoryRepository.findByName(request.category());
 
         final Post post = postRepository.save(new Post(
@@ -299,7 +298,7 @@ public class PostService {
     public LikesResponse likes(final Long id, final Long accountId) {
 
         final Account account = accountRepository.findById(accountId)
-            .orElseThrow(() -> new AccountNotFoundException("존재하지 않는 회원정보입니다."));
+            .orElseThrow(() -> new AccountException(ErrorCode.ACCOUNT_NOT_FOUND));
         final Post post = postRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
 
@@ -318,7 +317,7 @@ public class PostService {
     public LikesResponse unlikes(final Long id, final Long accountId) {
 
         final Account account = accountRepository.findById(accountId)
-            .orElseThrow(() -> new AccountNotFoundException("존재하지 않는 회원정보입니다."));
+            .orElseThrow(() -> new AccountException(ErrorCode.ACCOUNT_NOT_FOUND));
         final Post post = postRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
 

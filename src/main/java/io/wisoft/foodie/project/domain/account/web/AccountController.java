@@ -4,7 +4,7 @@ package io.wisoft.foodie.project.domain.account.web;
 import io.wisoft.foodie.project.domain.account.web.dto.req.UpdateAccountRequest;
 import io.wisoft.foodie.project.domain.account.application.AccountService;
 import io.wisoft.foodie.project.domain.account.web.dto.res.DeleteAccountResponse;
-import io.wisoft.foodie.project.domain.account.web.dto.res.FindAccountInfoResponse;
+import io.wisoft.foodie.project.domain.auth.web.dto.res.FindAccountInfoResponse;
 import io.wisoft.foodie.project.domain.account.web.dto.res.UpdateAccountResponse;
 import io.wisoft.foodie.project.global.resolver.AccountIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;

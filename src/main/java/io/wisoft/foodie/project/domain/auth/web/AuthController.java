@@ -1,11 +1,11 @@
-package io.wisoft.foodie.project.domain.account.web;
+package io.wisoft.foodie.project.domain.auth.web;
 
 
-import io.wisoft.foodie.project.domain.account.web.dto.req.FindByOauthIdRequest;
-import io.wisoft.foodie.project.domain.account.web.dto.req.SignUpRequest;
-import io.wisoft.foodie.project.domain.account.web.dto.res.SignInResponse;
-import io.wisoft.foodie.project.domain.account.application.AuthService;
-import io.wisoft.foodie.project.domain.account.web.dto.res.SignUpResponse;
+import io.wisoft.foodie.project.domain.auth.web.dto.req.FindByOauthIdRequest;
+import io.wisoft.foodie.project.domain.auth.web.dto.req.SignUpRequest;
+import io.wisoft.foodie.project.domain.auth.web.dto.res.SignInResponse;
+import io.wisoft.foodie.project.domain.auth.application.AuthService;
+import io.wisoft.foodie.project.domain.auth.web.dto.res.SignUpResponse;
 import io.wisoft.foodie.project.global.token.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

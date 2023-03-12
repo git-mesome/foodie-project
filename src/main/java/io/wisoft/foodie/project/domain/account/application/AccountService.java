@@ -1,12 +1,13 @@
 package io.wisoft.foodie.project.domain.account.application;
 
+import io.wisoft.foodie.project.domain.auth.web.ErrorCode;
+import io.wisoft.foodie.project.domain.auth.exception.AccountException;
 import io.wisoft.foodie.project.domain.account.persistance.Account;
 import io.wisoft.foodie.project.domain.account.persistance.AccountRepository;
 import io.wisoft.foodie.project.domain.account.web.dto.req.UpdateAccountRequest;
 import io.wisoft.foodie.project.domain.account.web.dto.res.DeleteAccountResponse;
-import io.wisoft.foodie.project.domain.account.web.dto.res.FindAccountInfoResponse;
+import io.wisoft.foodie.project.domain.auth.web.dto.res.FindAccountInfoResponse;
 import io.wisoft.foodie.project.domain.account.web.dto.res.UpdateAccountResponse;
-import io.wisoft.foodie.project.exception.AccountNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,9 +27,7 @@ public class AccountService {
     public FindAccountInfoResponse findById(final Long accountId) {
 
         final Account account = accountRepository.findById(accountId)
-                .orElseThrow(
-                        () -> new AccountNotFoundException(accountId + "에 해당하는 사용자가 없습니다.")
-                );
+                .orElseThrow(() -> new AccountException(ErrorCode.ACCOUNT_NOT_FOUND));
 
         return new FindAccountInfoResponse(
                 account.getId(),
@@ -47,7 +46,7 @@ public class AccountService {
     public UpdateAccountResponse update(final UpdateAccountRequest request, final Long id) {
 
         final Account account = accountRepository.findById(id)
-                .orElseThrow(() -> new AccountNotFoundException("없는 사용자 입니다."));
+                .orElseThrow(() -> new AccountException(ErrorCode.ACCOUNT_NOT_FOUND));
 
         account.update(request.nickname(),
                 request.phoneNumber(),
@@ -64,7 +63,7 @@ public class AccountService {
     @Transactional
     public DeleteAccountResponse delete(final Long id) {
         final Account account = accountRepository.findById(id)
-                .orElseThrow(() -> new AccountNotFoundException("없는 사용자 입니다."));
+                .orElseThrow(() -> new AccountException(ErrorCode.ACCOUNT_NOT_FOUND));
 
         accountRepository.deleteById(account.getId());
 

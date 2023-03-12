@@ -1,11 +1,13 @@
-package io.wisoft.foodie.project.domain.account.application;
+package io.wisoft.foodie.project.domain.auth.application;
 
+import io.wisoft.foodie.project.domain.auth.web.ErrorCode;
+import io.wisoft.foodie.project.domain.auth.exception.AccountException;
 import io.wisoft.foodie.project.domain.account.persistance.Account;
 import io.wisoft.foodie.project.domain.account.persistance.AccountRepository;
-import io.wisoft.foodie.project.domain.account.web.dto.req.FindByOauthIdRequest;
-import io.wisoft.foodie.project.domain.account.web.dto.req.SignUpRequest;
-import io.wisoft.foodie.project.domain.account.web.dto.res.SignUpResponse;
-import io.wisoft.foodie.project.domain.account.web.dto.res.SignInResponse;
+import io.wisoft.foodie.project.domain.auth.web.dto.req.FindByOauthIdRequest;
+import io.wisoft.foodie.project.domain.auth.web.dto.req.SignUpRequest;
+import io.wisoft.foodie.project.domain.auth.web.dto.res.SignUpResponse;
+import io.wisoft.foodie.project.domain.auth.web.dto.res.SignInResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,7 +44,7 @@ public class AuthService {
     public SignInResponse signIn(final FindByOauthIdRequest request) {
 
         final Account account = accountRepository.findByOauthId(request.oauthId())
-                .orElseThrow(() -> new IllegalStateException("없는 사용자 입니다."));
+                .orElseThrow(() -> new AccountException(ErrorCode.ACCOUNT_NOT_FOUND));
 
         return new SignInResponse(
                 account.getId(),

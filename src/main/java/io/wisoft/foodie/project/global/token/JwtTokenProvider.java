@@ -2,6 +2,8 @@ package io.wisoft.foodie.project.global.token;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import io.wisoft.foodie.project.domain.auth.web.ErrorCode;
+import io.wisoft.foodie.project.domain.auth.exception.InvalidTokenException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -63,6 +65,7 @@ public class JwtTokenProvider implements InitializingBean {
     }
 
     public Long getPayload(final String token) {
+
         try {
             return Long.valueOf(Jwts.parserBuilder()
                     .setSigningKey(secretKey.getBytes())
@@ -75,23 +78,30 @@ public class JwtTokenProvider implements InitializingBean {
             return Long.valueOf(e.getClaims().getSubject());
 
         } catch (JwtException e) {
-            throw new RuntimeException("유효하지 않은 토큰입니다.");
+            throw new InvalidTokenException(ErrorCode.INVALID_TOKEN);
         }
+
     }
 
     public boolean validateToken(final String token) {
+
         try {
             final Jws<Claims> claims = Jwts.parserBuilder()
                     .setSigningKey(secretKey.getBytes())
                     .build()
                     .parseClaimsJws(token);
 
-            return !claims.getBody().getExpiration().before(new Date());
+            if (claims.getBody().getExpiration().before(new Date())){
+                throw new InvalidTokenException(ErrorCode.EXPIRED_TOKEN);
+            }
 
-        } catch (JwtException | IllegalArgumentException e) {
-            e.printStackTrace();
-            return false;
+            //토큰이 유효한 경우 반환
+            return true;
+
+        } catch (JwtException e) {
+            throw new InvalidTokenException(ErrorCode.INVALID_TOKEN);
         }
+
     }
 
 }
