@@ -6,7 +6,8 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum ErrorCode {
 
-    ACCOUNT_NOT_FOUND("A001","Account not found", HttpStatus.NOT_FOUND),
+    NOT_FOUND_ACCOUNT("A001","Account not found", HttpStatus.NOT_FOUND),
+    NOT_FOUND_CHAT_ROOM("CR01","ChatRoom not found",HttpStatus.NOT_FOUND),
 
     //token
     INVALID_TOKEN("T001","Token ",HttpStatus.UNAUTHORIZED),

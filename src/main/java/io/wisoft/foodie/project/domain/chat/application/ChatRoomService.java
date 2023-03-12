@@ -1,5 +1,6 @@
 package io.wisoft.foodie.project.domain.chat.application;
 
+import io.wisoft.foodie.project.domain.auth.exception.ChatRoomException;
 import io.wisoft.foodie.project.domain.auth.web.ErrorCode;
 import io.wisoft.foodie.project.domain.auth.exception.AccountException;
 import io.wisoft.foodie.project.domain.account.persistance.Account;
@@ -91,7 +92,7 @@ public class ChatRoomService {
     public List<FindChatMessageDetailResponse> findAllChatMessageByRoomId(final Long id,
                                                                           final Long accountId) {
         final ChatRoom chatRoom = this.chatRoomRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 채팅방입니다."));
+            .orElseThrow(() -> new ChatRoomException(ErrorCode.NOT_FOUND_CHAT_ROOM));
         final Account account = this.accountRepository.findById(accountId)
             .orElseThrow(() -> new AccountException(ErrorCode.NOT_FOUND_ACCOUNT));
 

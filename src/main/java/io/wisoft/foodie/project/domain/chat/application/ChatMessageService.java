@@ -2,6 +2,8 @@ package io.wisoft.foodie.project.domain.chat.application;
 
 import io.wisoft.foodie.project.domain.account.persistance.Account;
 import io.wisoft.foodie.project.domain.account.persistance.AccountRepository;
+import io.wisoft.foodie.project.domain.auth.exception.ChatRoomException;
+import io.wisoft.foodie.project.domain.auth.web.ErrorCode;
 import io.wisoft.foodie.project.domain.chat.persistance.ChatMessage;
 import io.wisoft.foodie.project.domain.chat.persistance.ChatMessageRepository;
 import io.wisoft.foodie.project.domain.chat.persistance.ChatRoom;
@@ -33,7 +35,7 @@ public class ChatMessageService {
                               final Long senderId,
                               final String message){
         final ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
-                .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 채팅방입니다."));
+                .orElseThrow(()-> new ChatRoomException(ErrorCode.NOT_FOUND_CHAT_ROOM));
         final Account sender = accountRepository.findById(senderId).orElseThrow();
         return chatMessageRepository.save(
                 ChatMessage.createChat(chatRoom,sender,message));
