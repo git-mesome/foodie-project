@@ -57,7 +57,7 @@ public class PostService {
                                          final Long authorId) {
 
         final Account account = accountRepository.findById(authorId)
-            .orElseThrow(() -> new AccountException(ErrorCode.ACCOUNT_NOT_FOUND));
+            .orElseThrow(() -> new AccountException(ErrorCode.NOT_FOUND_ACCOUNT));
         final Category category = categoryRepository.findByName(request.category());
 
         final Post post = postRepository.save(new Post(
@@ -298,7 +298,7 @@ public class PostService {
     public LikesResponse likes(final Long id, final Long accountId) {
 
         final Account account = accountRepository.findById(accountId)
-            .orElseThrow(() -> new AccountException(ErrorCode.ACCOUNT_NOT_FOUND));
+            .orElseThrow(() -> new AccountException(ErrorCode.NOT_FOUND_ACCOUNT));
         final Post post = postRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
 
@@ -317,7 +317,7 @@ public class PostService {
     public LikesResponse unlikes(final Long id, final Long accountId) {
 
         final Account account = accountRepository.findById(accountId)
-            .orElseThrow(() -> new AccountException(ErrorCode.ACCOUNT_NOT_FOUND));
+            .orElseThrow(() -> new AccountException(ErrorCode.NOT_FOUND_ACCOUNT));
         final Post post = postRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
 

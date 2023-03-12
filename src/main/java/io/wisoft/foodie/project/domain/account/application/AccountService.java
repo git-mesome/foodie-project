@@ -27,7 +27,7 @@ public class AccountService {
     public FindAccountInfoResponse findById(final Long accountId) {
 
         final Account account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new AccountException(ErrorCode.ACCOUNT_NOT_FOUND));
+                .orElseThrow(() -> new AccountException(ErrorCode.NOT_FOUND_ACCOUNT));
 
         return new FindAccountInfoResponse(
                 account.getId(),
@@ -46,7 +46,7 @@ public class AccountService {
     public UpdateAccountResponse update(final UpdateAccountRequest request, final Long id) {
 
         final Account account = accountRepository.findById(id)
-                .orElseThrow(() -> new AccountException(ErrorCode.ACCOUNT_NOT_FOUND));
+                .orElseThrow(() -> new AccountException(ErrorCode.NOT_FOUND_ACCOUNT));
 
         account.update(request.nickname(),
                 request.phoneNumber(),
@@ -63,7 +63,7 @@ public class AccountService {
     @Transactional
     public DeleteAccountResponse delete(final Long id) {
         final Account account = accountRepository.findById(id)
-                .orElseThrow(() -> new AccountException(ErrorCode.ACCOUNT_NOT_FOUND));
+                .orElseThrow(() -> new AccountException(ErrorCode.NOT_FOUND_ACCOUNT));
 
         accountRepository.deleteById(account.getId());
 

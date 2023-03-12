@@ -44,7 +44,7 @@ public class JwtAuthInterceptor implements HandlerInterceptor {
         }
 
         if (accountId == null) {
-            throw new AccountException(ErrorCode.ACCOUNT_NOT_FOUND);
+            throw new AccountException(ErrorCode.NOT_FOUND_ACCOUNT);
         }
 
         throw new AccessDeniedException("Access is denied");

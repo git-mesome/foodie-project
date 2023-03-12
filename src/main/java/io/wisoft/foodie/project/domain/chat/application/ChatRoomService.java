@@ -45,7 +45,7 @@ public class ChatRoomService {
                                              final Long senderId) {
 
         final Account account = this.accountRepository.findById(senderId)
-            .orElseThrow(() -> new AccountException(ErrorCode.ACCOUNT_NOT_FOUND));
+            .orElseThrow(() -> new AccountException(ErrorCode.NOT_FOUND_ACCOUNT));
         final Post post = this.postRepository.findById(postId)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시물입니다."));
 
@@ -93,7 +93,7 @@ public class ChatRoomService {
         final ChatRoom chatRoom = this.chatRoomRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 채팅방입니다."));
         final Account account = this.accountRepository.findById(accountId)
-            .orElseThrow(() -> new AccountException(ErrorCode.ACCOUNT_NOT_FOUND));
+            .orElseThrow(() -> new AccountException(ErrorCode.NOT_FOUND_ACCOUNT));
 
         List<ChatMessage> chatMessageList = chatMessageRepository.findByChatRoomId(chatRoom.getId());
 

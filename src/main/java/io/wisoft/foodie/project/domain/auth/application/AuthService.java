@@ -44,7 +44,7 @@ public class AuthService {
     public SignInResponse signIn(final FindByOauthIdRequest request) {
 
         final Account account = accountRepository.findByOauthId(request.oauthId())
-                .orElseThrow(() -> new AccountException(ErrorCode.ACCOUNT_NOT_FOUND));
+                .orElseThrow(() -> new AccountException(ErrorCode.NOT_FOUND_ACCOUNT));
 
         return new SignInResponse(
                 account.getId(),
